@@ -1,6 +1,7 @@
 package g_mungus;
 
-import g_mungus.data.CosmicDataScanner;
+import g_mungus.data.planet.PlanetDataScanner;
+
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lointain.cosmos.CosmosMod;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,8 @@ public final class DeepSpaceMod {
         // However, some things (like registries and resources) may still be uninitialized.
         // Proceed with mild caution.
 
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new CosmicDataScanner());
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new PlanetDataScanner());
+
+
     }
 }
