@@ -29,7 +29,13 @@ public class PlanetDataStore {
             inputStream.close();
 
             PlanetDataWrapper wrapper = mapper.readValue(bytes, PlanetDataWrapper.class);
-            data.put(resourceLocation, wrapper.planet_data.values().stream().toList());
+            ResourceLocation newResourceLocation = ResourceLocation.fromNamespaceAndPath(
+                    resourceLocation.getNamespace(),
+                    resourceLocation.getPath()
+                            .replace("cosmic_data/", "")
+                            .replace(".json", "")
+            );
+            data.put(newResourceLocation, wrapper.planet_data.values().stream().toList());
         } catch (Exception e) {
             DeepSpaceMod.LOGGER.warn("Failed to read resource: {}", resourceLocation.toString(), e);
         }
