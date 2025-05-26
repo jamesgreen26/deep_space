@@ -1,5 +1,6 @@
 package g_mungus.block;
 
+import g_mungus.blockentity.ModBlockEntities;
 import g_mungus.blockentity.VoidCoreBlockEntity;
 import g_mungus.blockentity.VoidEngineInterfaceBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -82,5 +85,11 @@ public class VoidEngineInterfaceBlock extends BaseEntityBlock {
     public void onRemove(BlockState arg, Level arg2, BlockPos arg3, BlockState arg4, boolean bl) {
         super.onRemove(arg, arg2, arg3, arg4, bl);
         VoidCoreBlockEntity.updateVoidCore(arg3, arg2);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide ? null : createTickerHelper(type, ModBlockEntities.VOID_ENGINE_INTERFACE.get(), VoidEngineInterfaceBlockEntity::tick);
     }
 } 
