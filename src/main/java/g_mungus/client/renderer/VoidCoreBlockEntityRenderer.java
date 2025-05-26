@@ -67,24 +67,6 @@ public class VoidCoreBlockEntityRenderer implements BlockEntityRenderer<VoidCore
         // Draw quad with full texture coordinates
         // Order vertices based on normal direction to ensure face is visible from outside
         if (normalX > 0 || normalY > 0 || normalZ > 0) {
-            // For positive normals, draw counter-clockwise
-            consumer.vertex(rotatedMatrix, -size , -size , x + y + z)
-                    .color(0, 0, 0, 255)
-                    .uv(0, 0)
-                    .endVertex();
-            consumer.vertex(rotatedMatrix, -size , size , x + y + z)
-                    .color(0, 0, 0, 255)
-                    .uv(0, 1)
-                    .endVertex();
-            consumer.vertex(rotatedMatrix, size , size , x + y + z)
-                    .color(0, 0, 0, 255)
-                    .uv(1, 1)
-                    .endVertex();
-            consumer.vertex(rotatedMatrix, size , -size , x + y + z)
-                    .color(0, 0, 0, 255)
-                    .uv(1, 0)
-                    .endVertex();
-        } else {
             // For negative normals, draw clockwise
             consumer.vertex(rotatedMatrix, -size , -size , x + y + z)
                     .color(0, 0, 0, 255)
@@ -101,6 +83,24 @@ public class VoidCoreBlockEntityRenderer implements BlockEntityRenderer<VoidCore
             consumer.vertex(rotatedMatrix, -size , size , x + y + z)
                     .color(0, 0, 0, 255)
                     .uv(0, 1)
+                    .endVertex();
+        } else {
+            // For positive normals, draw counter-clockwise
+            consumer.vertex(rotatedMatrix, -size , -size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(0, 0)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, -size , size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(0, 1)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, size , size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(1, 1)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, size , -size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(1, 0)
                     .endVertex();
         }
     }
