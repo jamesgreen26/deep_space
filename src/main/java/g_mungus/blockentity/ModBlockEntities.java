@@ -15,4 +15,9 @@ public class ModBlockEntities {
         BLOCK_ENTITIES.register("nav_projector", 
             () -> BlockEntityType.Builder.of(NavProjectorBlockEntity::new, 
                 ModBlocks.NAV_PROJECTOR.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<VoidEngineInterfaceBlockEntity>> VOID_ENGINE_INTERFACE = 
+        BLOCK_ENTITIES.register("void_engine_interface", 
+            () -> BlockEntityType.Builder.of(VoidEngineInterfaceBlockEntity::new, 
+                ModBlocks.VOID_ENGINE_INTERFACE.get()).build(null));
 } 

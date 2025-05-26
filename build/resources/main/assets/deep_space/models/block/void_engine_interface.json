@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "down": "deep_space:block/void_engine_frame",
+        "up": "deep_space:block/void_engine_frame",
+        "north": "deep_space:block/void_engine_interface",
+        "south": "deep_space:block/void_engine_frame",
+        "east": "deep_space:block/void_engine_frame",
+        "west": "deep_space:block/void_engine_frame",
+        "particle": "void_engine_frame"
+    }
+} 

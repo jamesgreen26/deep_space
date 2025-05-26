@@ -1,0 +1,19 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "deep_space:block/void_engine_interface"
+        },
+        "facing=east": {
+            "model": "deep_space:block/void_engine_interface",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "deep_space:block/void_engine_interface",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "deep_space:block/void_engine_interface",
+            "y": 270
+        }
+    }
+} 

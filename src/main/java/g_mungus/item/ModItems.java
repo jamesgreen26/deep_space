@@ -14,4 +14,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> NAV_PROJECTOR = ITEMS.register("nav_projector",
         () -> new BlockItem(ModBlocks.NAV_PROJECTOR.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> VOID_ENGINE_INTERFACE = ITEMS.register("void_engine_interface",
+        () -> new BlockItem(ModBlocks.VOID_ENGINE_INTERFACE.get(), new Item.Properties()));
 } 

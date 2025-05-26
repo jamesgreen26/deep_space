@@ -28,12 +28,12 @@ public final class DeepSpaceMod {
             ResourceLocation.fromNamespaceAndPath(CosmosMod.MODID, "b_1400_centauri")
     );
 
-    public DeepSpaceMod() {
+    public DeepSpaceMod(FMLJavaModLoadingContext context) {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like registries and resources) may still be uninitialized.
         // Proceed with mild caution.
 
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modEventBus = context.getModEventBus();
 
         // Register blocks and block entities
         ModBlocks.BLOCKS.register(modEventBus);
