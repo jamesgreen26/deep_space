@@ -1,7 +1,10 @@
 {
     "variants": {
-        "": {
-            "model": "deep_space:block/void_core"
+        "dormant=false": {
+            "model": "deep_space:block/void_core_dormant"
+        },
+        "dormant=true": {
+            "model": "deep_space:block/void_core_dormant"
         }
     }
 } 

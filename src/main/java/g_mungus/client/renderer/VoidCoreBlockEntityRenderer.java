@@ -2,6 +2,8 @@ package g_mungus.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import g_mungus.block.ModBlocks;
+import g_mungus.block.VoidCoreBlock;
 import g_mungus.blockentity.VoidCoreBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -10,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 
 public class VoidCoreBlockEntityRenderer implements BlockEntityRenderer<VoidCoreBlockEntity> {
@@ -21,6 +24,13 @@ public class VoidCoreBlockEntityRenderer implements BlockEntityRenderer<VoidCore
     @Override
     public void render(VoidCoreBlockEntity blockEntity, float partialTick, PoseStack poseStack,
                       MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        BlockState state = blockEntity.getBlockState();
+
+        if (state.hasProperty(VoidCoreBlock.DORMANT)) {
+            if (state.getValue(VoidCoreBlock.DORMANT)) {
+                return;
+            }
+        }
         poseStack.pushPose();
 
         // Move to center of block
