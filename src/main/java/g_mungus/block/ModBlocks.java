@@ -34,4 +34,7 @@ public class ModBlocks {
             .requiresCorrectToolForDrops()
             .noOcclusion()
             .lightLevel(state -> 15))); // Emits light level 15
+
+    public static final RegistryObject<Block> VOID_ENGINE_VIEWPORT = BLOCKS.register("void_engine_viewport",
+        () -> new VoidEngineViewportBlock());
 } 

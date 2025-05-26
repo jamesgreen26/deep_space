@@ -23,4 +23,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> VOID_CORE = ITEMS.register("void_core",
         () -> new BlockItem(ModBlocks.VOID_CORE.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> VOID_ENGINE_VIEWPORT = ITEMS.register("void_engine_viewport",
+        () -> new BlockItem(ModBlocks.VOID_ENGINE_VIEWPORT.get(), new Item.Properties()));
 } 
