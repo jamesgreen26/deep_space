@@ -5,6 +5,7 @@ import g_mungus.blockentity.ModBlockEntities;
 import g_mungus.data.planet.PlanetDataScanner;
 import g_mungus.item.ModCreativeTabs;
 import g_mungus.item.ModItems;
+import g_mungus.sound.ModSounds;
 
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lointain.cosmos.CosmosMod;
@@ -41,6 +42,7 @@ public final class DeepSpaceMod {
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
+        ModSounds.SOUND_EVENTS.register(modEventBus);
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new PlanetDataScanner());
     }
