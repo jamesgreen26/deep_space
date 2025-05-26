@@ -49,7 +49,7 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
 
         Vector3dc shipPos = null;
 
-        int scale_factor = 5000;
+        int scale_factor = 3000;
 
         blockRenderer.renderSingleBlock(Blocks.WHITE_CONCRETE.defaultBlockState(),
                 poseStack,
