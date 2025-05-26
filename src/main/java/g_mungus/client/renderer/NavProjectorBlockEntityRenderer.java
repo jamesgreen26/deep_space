@@ -6,6 +6,7 @@ import g_mungus.DeepSpaceMod;
 import g_mungus.blockentity.NavProjectorBlockEntity;
 import g_mungus.data.planet.DisplayablePlanetData;
 import g_mungus.data.planet.PlanetDataStore;
+import kotlin.Suppress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.joml.*;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSClientGameUtils;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.lang.Math;
@@ -45,9 +47,11 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
         Ship ship = VSGameUtilsKt.getShipManagingPos(blockEntity.getLevel(), pos);
         boolean isOnShip = ship != null;
 
+        Vector3dc shipPos = null;
+
         int scale_factor = 5000;
 
-        blockRenderer.renderSingleBlock(Blocks.LIME_CONCRETE.defaultBlockState(),
+        blockRenderer.renderSingleBlock(Blocks.WHITE_CONCRETE.defaultBlockState(),
                 poseStack,
                 bufferSource,
                 packedLight,
@@ -57,15 +61,20 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
         if(!isOnShip) {
             poseStack.translate((float) -pos.getX() / scale_factor, (float) -pos.getY() / scale_factor, (float) -pos.getZ() / scale_factor);
         } else {
-            Vector3dc shipPos = ship.getWorldAABB().center(new Vector3d());
+            shipPos = ship.getWorldAABB().center(new Vector3d());
             poseStack.translate((float) -shipPos.x() / scale_factor, (float) -shipPos.y() / scale_factor, (float) -shipPos.z() / scale_factor);
             Quaterniondc rot = ship.getTransform().getShipToWorldRotation().invert(new Quaterniond());
             poseStack.mulPose(new Quaternionf(rot.x(), rot.y(), rot.z(), rot.w()));
         }
 
-        planetData.forEach((data -> {
+        for (DisplayablePlanetData data : planetData) {
+            if (isOnShip) {
+                if (new Vector3d(data.x, data.y, data.z).sub(new Vector3d(shipPos)).length() > 120000) continue;
+            } else {
+                if (new Vector3d(data.x, data.y, data.z).sub(new Vector3d(pos.getX(), pos.getY(), pos.getZ())).length() > 120000) continue;
+            }
 
-            float scale = (float) ( 2 * Math.sqrt(data.scale) / Math.sqrt(scale_factor));
+            float scale = (float) (2 * Math.sqrt(data.scale) / Math.sqrt(scale_factor));
             if (scale > 0) {
                 poseStack.translate(data.x / scale_factor, data.y / scale_factor, data.z / scale_factor);
                 poseStack.scale(scale, scale, scale);
@@ -73,7 +82,7 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
                 Quaternionf rot = eulerToQuaternion(data.roll * Math.PI / 180, data.pitch * Math.PI / 180, data.yaw * Math.PI / 180);
                 poseStack.mulPose(rot);
 
-                blockRenderer.renderSingleBlock(Blocks.LIGHT_BLUE_CONCRETE.defaultBlockState(),
+                blockRenderer.renderSingleBlock(Blocks.LIGHT_BLUE_STAINED_GLASS.defaultBlockState(),
                         poseStack,
                         bufferSource,
                         packedLight,
@@ -84,7 +93,7 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
                 poseStack.scale(1 / scale, 1 / scale, 1 / scale);
                 poseStack.translate(-data.x / scale_factor, -data.y / scale_factor, -data.z / scale_factor);
             }
-        }));
+        }
 
 
         poseStack.popPose();
