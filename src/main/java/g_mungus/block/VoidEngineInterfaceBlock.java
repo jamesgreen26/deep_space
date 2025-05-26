@@ -1,10 +1,12 @@
 package g_mungus.block;
 
+import g_mungus.blockentity.VoidCoreBlockEntity;
 import g_mungus.blockentity.VoidEngineInterfaceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -68,5 +70,17 @@ public class VoidEngineInterfaceBlock extends BaseEntityBlock {
     @Override
     public boolean canConnectRedstone(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         return true;
+    }
+
+    @Override
+    public void onBlockStateChange(LevelReader level, BlockPos pos, BlockState oldState, BlockState newState) {
+        super.onBlockStateChange(level, pos, oldState, newState);
+        VoidCoreBlockEntity.updateVoidCore(pos, level);
+    }
+
+    @Override
+    public void onRemove(BlockState arg, Level arg2, BlockPos arg3, BlockState arg4, boolean bl) {
+        super.onRemove(arg, arg2, arg3, arg4, bl);
+        VoidCoreBlockEntity.updateVoidCore(arg3, arg2);
     }
 } 
