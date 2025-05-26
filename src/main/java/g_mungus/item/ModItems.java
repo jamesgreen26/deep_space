@@ -17,4 +17,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> VOID_ENGINE_INTERFACE = ITEMS.register("void_engine_interface",
         () -> new BlockItem(ModBlocks.VOID_ENGINE_INTERFACE.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> VOID_ENGINE_FRAME = ITEMS.register("void_engine_frame",
+        () -> new BlockItem(ModBlocks.VOID_ENGINE_FRAME.get(), new Item.Properties()));
 } 

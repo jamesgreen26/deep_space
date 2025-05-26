@@ -24,4 +24,7 @@ public class ModBlocks {
             .strength(3.0f)
             .requiresCorrectToolForDrops()
             .noOcclusion()));
+
+    public static final RegistryObject<Block> VOID_ENGINE_FRAME = BLOCKS.register("void_engine_frame",
+        () -> new VoidEngineFrameBlock());
 } 
