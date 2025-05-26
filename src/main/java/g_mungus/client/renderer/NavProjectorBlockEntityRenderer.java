@@ -51,6 +51,8 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
 
         int scale_factor = 3000;
 
+        poseStack.translate(-0.5D, -0.5D, -0.5D);
+
         blockRenderer.renderSingleBlock(Blocks.WHITE_CONCRETE.defaultBlockState(),
                 poseStack,
                 bufferSource,
@@ -58,13 +60,15 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
                 packedOverlay
         );
 
+        poseStack.translate(0.5D, 0.5D, 0.5D);
+
         if(!isOnShip) {
             poseStack.translate((float) -pos.getX() / scale_factor, (float) -pos.getY() / scale_factor, (float) -pos.getZ() / scale_factor);
         } else {
-            shipPos = ship.getWorldAABB().center(new Vector3d());
-            poseStack.translate((float) -shipPos.x() / scale_factor, (float) -shipPos.y() / scale_factor, (float) -shipPos.z() / scale_factor);
             Quaterniondc rot = ship.getTransform().getShipToWorldRotation().invert(new Quaterniond());
             poseStack.mulPose(new Quaternionf(rot.x(), rot.y(), rot.z(), rot.w()));
+            shipPos = ship.getWorldAABB().center(new Vector3d());
+            poseStack.translate((float) -shipPos.x() / scale_factor, (float) -shipPos.y() / scale_factor, (float) -shipPos.z() / scale_factor);
         }
 
         for (DisplayablePlanetData data : planetData) {
@@ -82,12 +86,16 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
                 Quaternionf rot = eulerToQuaternion(data.roll * Math.PI / 180, data.pitch * Math.PI / 180, data.yaw * Math.PI / 180);
                 poseStack.mulPose(rot);
 
+                poseStack.translate(-0.5D, -0.5D, -0.5D);
+
                 blockRenderer.renderSingleBlock(Blocks.LIGHT_BLUE_STAINED_GLASS.defaultBlockState(),
                         poseStack,
                         bufferSource,
                         packedLight,
                         packedOverlay
                 );
+
+                poseStack.translate(0.5D, 0.5D, 0.5D);
 
                 poseStack.mulPose(rot.invert());
                 poseStack.scale(1 / scale, 1 / scale, 1 / scale);
