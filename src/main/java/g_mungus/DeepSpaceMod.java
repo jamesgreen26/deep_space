@@ -24,11 +24,17 @@ public final class DeepSpaceMod {
     public static final String MOD_ID = "deep_space";
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+    public static ResourceLocation WORMHOLE_DIM = ResourceLocation.fromNamespaceAndPath(MOD_ID, "wormhole");
+
     public static List<ResourceLocation> space_dims = List.of(
             ResourceLocation.fromNamespaceAndPath(CosmosMod.MODID, "solar_system"),
             ResourceLocation.fromNamespaceAndPath(CosmosMod.MODID, "alpha_system"),
             ResourceLocation.fromNamespaceAndPath(CosmosMod.MODID, "b_1400_centauri")
     );
+
+    public static boolean isWithoutVoid(ResourceLocation dimension) {
+        return (dimension.toString().equals(WORMHOLE_DIM.toString()));
+    }
 
     public DeepSpaceMod(FMLJavaModLoadingContext context) {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
