@@ -15,9 +15,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import net.minecraft.world.phys.Vec3;
+import org.joml.*;
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
+import java.lang.Math;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,10 +42,26 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
         poseStack.scale(0.02f, 0.02f, 0.02f);
         BlockPos pos = blockEntity.getBlockPos();
 
+        Ship ship = VSGameUtilsKt.getShipManagingPos(blockEntity.getLevel(), pos);
+        boolean isOnShip = ship != null;
+
         int scale_factor = 5000;
 
-        poseStack.translate((float) -pos.getX() / scale_factor, (float) -pos.getY() / scale_factor, (float) -pos.getZ() / scale_factor);
+        blockRenderer.renderSingleBlock(Blocks.LIME_CONCRETE.defaultBlockState(),
+                poseStack,
+                bufferSource,
+                packedLight,
+                packedOverlay
+        );
 
+        if(!isOnShip) {
+            poseStack.translate((float) -pos.getX() / scale_factor, (float) -pos.getY() / scale_factor, (float) -pos.getZ() / scale_factor);
+        } else {
+            Vector3dc shipPos = ship.getWorldAABB().center(new Vector3d());
+            poseStack.translate((float) -shipPos.x() / scale_factor, (float) -shipPos.y() / scale_factor, (float) -shipPos.z() / scale_factor);
+            Quaterniondc rot = ship.getTransform().getShipToWorldRotation().invert(new Quaterniond());
+            poseStack.mulPose(new Quaternionf(rot.x(), rot.y(), rot.z(), rot.w()));
+        }
 
         planetData.forEach((data -> {
 
@@ -66,19 +85,6 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
                 poseStack.translate(-data.x / scale_factor, -data.y / scale_factor, -data.z / scale_factor);
             }
         }));
-
-        poseStack.translate((float) pos.getX() / scale_factor, (float) pos.getY() / scale_factor, (float) pos.getZ() / scale_factor);
-
-
-        blockRenderer.renderSingleBlock(Blocks.LIME_CONCRETE.defaultBlockState(),
-                poseStack,
-                bufferSource,
-                packedLight,
-                packedOverlay
-        );
-
-
-        
 
 
         poseStack.popPose();

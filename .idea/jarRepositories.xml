@@ -86,5 +86,10 @@
       <option name="name" value="Sinytra" />
       <option name="url" value="https://maven.su5ed.dev/releases" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="Valkyrien Skies Internal" />
+      <option name="name" value="Valkyrien Skies Internal" />
+      <option name="url" value="https://maven.valkyrienskies.org" />
+    </remote-repository>
   </component>
 </project>
