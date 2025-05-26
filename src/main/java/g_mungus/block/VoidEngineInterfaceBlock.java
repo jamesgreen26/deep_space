@@ -64,4 +64,9 @@ public class VoidEngineInterfaceBlock extends BaseEntityBlock {
             }
         }
     }
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+        return true;
+    }
 } 
