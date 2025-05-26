@@ -7,6 +7,6 @@
         "south": "deep_space:block/void_engine_frame",
         "east": "deep_space:block/void_engine_frame",
         "west": "deep_space:block/void_engine_frame",
-        "particle": "deep_space:void_engine_frame"
+        "particle": "deep_space:block/void_engine_frame"
     }
 } 

@@ -3,7 +3,7 @@
     "textures": {
         "down": "deep_space:block/void_engine_frame",
         "up": "deep_space:block/void_engine_frame",
-        "north": "deep_space:block/void_engine_interface",
+        "north": "deep_space:block/void_engine_interface_powered",
         "south": "deep_space:block/void_engine_frame",
         "east": "deep_space:block/void_engine_frame",
         "west": "deep_space:block/void_engine_frame",

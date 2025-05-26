@@ -12,15 +12,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.Nullable;
 
 public class VoidEngineInterfaceBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public VoidEngineInterfaceBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any()
+            .setValue(FACING, Direction.NORTH)
+            .setValue(POWERED, false));
     }
 
     @Nullable
@@ -36,7 +40,7 @@ public class VoidEngineInterfaceBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, POWERED);
     }
 
     @Nullable
@@ -46,6 +50,18 @@ public class VoidEngineInterfaceBlock extends BaseEntityBlock {
         if (context.getPlayer() != null && context.getPlayer().isCrouching()) {
             facing = facing.getOpposite();
         }
-        return this.defaultBlockState().setValue(FACING, facing);
+        return this.defaultBlockState()
+            .setValue(FACING, facing)
+            .setValue(POWERED, false);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (!level.isClientSide) {
+            boolean isPowered = level.hasNeighborSignal(pos);
+            if (isPowered != state.getValue(POWERED)) {
+                level.setBlock(pos, state.setValue(POWERED, isPowered), 3);
+            }
+        }
     }
 } 
