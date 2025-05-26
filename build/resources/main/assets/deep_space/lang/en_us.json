@@ -9,5 +9,7 @@
     "item.deep_space.void_engine_interface": "Void Engine Interface",
     "item.deep_space.void_engine_frame": "Void Engine Frame",
     "item.deep_space.void_core": "Void Core",
-    "item.deep_space.void_engine_viewport": "Void Engine Viewport"
+    "item.deep_space.void_engine_viewport": "Void Engine Viewport",
+
+    "creativetab.deep_space_tab": "Deep Space"
 } 
