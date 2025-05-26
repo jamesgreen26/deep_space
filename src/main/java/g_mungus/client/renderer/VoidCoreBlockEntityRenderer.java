@@ -15,7 +15,6 @@ import org.joml.Matrix4f;
 public class VoidCoreBlockEntityRenderer implements BlockEntityRenderer<VoidCoreBlockEntity> {
     private static final ResourceLocation PORTAL_TEXTURE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/end_portal.png");
     private static final float PORTAL_SIZE = 0.5f;
-    private static final float PORTAL_DEPTH = 0.1f;
 
     public VoidCoreBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -27,42 +26,83 @@ public class VoidCoreBlockEntityRenderer implements BlockEntityRenderer<VoidCore
         // Move to center of block
         poseStack.translate(0.5D, 0.5D, 0.5D);
         
-        // Calculate animation
-        float time = (Minecraft.getInstance().level.getGameTime() + partialTick) * 0.01f;
-        float scale = Mth.sin(time) * 0.1f + 1.0f;
+        float scale = 1.0f;
 
         // Draw the portal
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.endPortal());
         Matrix4f matrix = poseStack.last().pose();
 
-        // Draw front face
-        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, PORTAL_DEPTH, 1.0f);
-        
-        // Draw back face
-        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, -PORTAL_DEPTH, -1.0f);
+        // Draw all six faces of the cube
+        // Front face (Z+)
+        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, 0, 0, 1);
+        // Back face (Z-)
+        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, 0, 0, -1);
+        // Top face (Y+)
+        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, 0, 1, 0);
+        // Bottom face (Y-)
+        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, 0, -1, 0);
+        // Right face (X+)
+        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, 1, 0, 0);
+        // Left face (X-)
+        drawPortalFace(vertexConsumer, matrix, scale, PORTAL_SIZE, -1, 0, 0);
 
         poseStack.popPose();
     }
 
     private void drawPortalFace(VertexConsumer consumer, Matrix4f matrix,
-                              float scale, float size, float depth, float normal) {
+                              float scale, float size, float normalX, float normalY, float normalZ) {
+        // Rotate the face based on its normal
+        PoseStack tempStack = new PoseStack();
+        if (normalX != 0) {
+            tempStack.mulPose(new org.joml.Quaternionf().rotationY((float) Math.PI / 2));
+        } else if (normalY != 0) {
+            tempStack.mulPose(new org.joml.Quaternionf().rotationX((float) Math.PI / 2));
+        }
+        Matrix4f rotatedMatrix = new Matrix4f(matrix).mul(tempStack.last().pose());
+
+        float x = size * normalX;
+        float y = size * normalY;
+        float z = size * normalZ;
+
         // Draw quad with full texture coordinates
-        consumer.vertex(matrix, -size * scale, -size * scale, depth)
-                .color(0, 0, 0, 255)
-                .uv(0, 0)
-                .endVertex();
-        consumer.vertex(matrix, size * scale, -size * scale, depth)
-                .color(0, 0, 0, 255)
-                .uv(1, 0)
-                .endVertex();
-        consumer.vertex(matrix, size * scale, size * scale, depth)
-                .color(0, 0, 0, 255)
-                .uv(1, 1)
-                .endVertex();
-        consumer.vertex(matrix, -size * scale, size * scale, depth)
-                .color(0, 0, 0, 255)
-                .uv(0, 1)
-                .endVertex();
+        // Order vertices based on normal direction to ensure face is visible from outside
+        if (normalX > 0 || normalY > 0 || normalZ > 0) {
+            // For positive normals, draw counter-clockwise
+            consumer.vertex(rotatedMatrix, -size , -size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(0, 0)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, -size , size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(0, 1)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, size , size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(1, 1)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, size , -size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(1, 0)
+                    .endVertex();
+        } else {
+            // For negative normals, draw clockwise
+            consumer.vertex(rotatedMatrix, -size , -size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(0, 0)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, size , -size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(1, 0)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, size , size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(1, 1)
+                    .endVertex();
+            consumer.vertex(rotatedMatrix, -size , size , x + y + z)
+                    .color(0, 0, 0, 255)
+                    .uv(0, 1)
+                    .endVertex();
+        }
     }
 
     @Override
