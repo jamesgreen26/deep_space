@@ -1,0 +1,13 @@
+{
+    "block.deep_space.nav_projector": "Nav Projector",
+    "block.deep_space.void_engine_interface": "Void Engine Interface",
+    "block.deep_space.void_engine_frame": "Void Engine Frame",
+    "block.deep_space.void_core": "Void Core",
+    "block.deep_space.void_engine_viewport": "Void Engine Viewport",
+
+    "item.deep_space.nav_projector": "Nav Projector",
+    "item.deep_space.void_engine_interface": "Void Engine Interface",
+    "item.deep_space.void_engine_frame": "Void Engine Frame",
+    "item.deep_space.void_core": "Void Core",
+    "item.deep_space.void_engine_viewport": "Void Engine Viewport"
+} 
