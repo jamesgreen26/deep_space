@@ -1,0 +1,19 @@
+{
+  "attached_dimention_id": "deep_space:wormhole",
+  "skybox_data": {
+    "texture_id": "skybox_solar",
+    "alpha": 255,
+    "yaw": 23,
+    "pitch": 23,
+    "roll": 23
+  },
+  "dimensional_data": {
+    "dimension_type": "space",
+    "weather": false,
+    "clouds": false,
+    "sky_objects": false,
+    "gravity": 0,
+    "air_resistance": 1
+  },
+  "sky_data": {}
+}
