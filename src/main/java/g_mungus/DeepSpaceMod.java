@@ -3,6 +3,7 @@ package g_mungus;
 import g_mungus.block.ModBlocks;
 import g_mungus.blockentity.ModBlockEntities;
 import g_mungus.data.planet.PlanetDataScanner;
+import g_mungus.item.ModItems;
 
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lointain.cosmos.CosmosMod;
@@ -37,6 +38,7 @@ public final class DeepSpaceMod {
         // Register blocks and block entities
         ModBlocks.BLOCKS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new PlanetDataScanner());
     }
