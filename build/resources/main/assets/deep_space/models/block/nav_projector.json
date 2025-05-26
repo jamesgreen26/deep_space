@@ -6,6 +6,7 @@
         "north": "deep_space:block/nav_projector_side",
         "south": "deep_space:block/nav_projector_side",
         "east": "deep_space:block/nav_projector_side",
-        "west": "deep_space:block/nav_projector_side"
+        "west": "deep_space:block/nav_projector_side",
+        "particle": "deep_space:block/nav_projector_bottom"
     }
 } 

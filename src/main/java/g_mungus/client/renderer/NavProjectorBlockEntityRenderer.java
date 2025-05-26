@@ -37,7 +37,7 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
         ResourceLocation dimension = Objects.requireNonNull(blockEntity.getLevel()).dimension().location();
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-        List<DisplayablePlanetData> planetData = PlanetDataStore.data.getOrDefault(dimension, null);
+        List<DisplayablePlanetData> planetData = PlanetDataStore.data.getOrDefault(dimension, List.of());
         
         // Move to center of block
         poseStack.translate(0.5D, 1.5D, 0.5D);
