@@ -27,4 +27,11 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> VOID_ENGINE_FRAME = BLOCKS.register("void_engine_frame",
         () -> new VoidEngineFrameBlock());
+
+    public static final RegistryObject<Block> VOID_CORE = BLOCKS.register("void_core",
+        () -> new VoidCoreBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            .strength(3.0f)
+            .requiresCorrectToolForDrops()
+            .noOcclusion()
+            .lightLevel(state -> 15))); // Emits light level 15
 } 

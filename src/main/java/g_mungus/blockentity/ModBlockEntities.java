@@ -20,4 +20,9 @@ public class ModBlockEntities {
         BLOCK_ENTITIES.register("void_engine_interface", 
             () -> BlockEntityType.Builder.of(VoidEngineInterfaceBlockEntity::new, 
                 ModBlocks.VOID_ENGINE_INTERFACE.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<VoidCoreBlockEntity>> VOID_CORE = 
+        BLOCK_ENTITIES.register("void_core", 
+            () -> BlockEntityType.Builder.of(VoidCoreBlockEntity::new, 
+                ModBlocks.VOID_CORE.get()).build(null));
 } 

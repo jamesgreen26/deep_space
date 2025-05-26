@@ -3,6 +3,7 @@ package g_mungus.client;
 import g_mungus.DeepSpaceMod;
 import g_mungus.blockentity.ModBlockEntities;
 import g_mungus.client.renderer.NavProjectorBlockEntityRenderer;
+import g_mungus.client.renderer.VoidCoreBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,6 +16,7 @@ public class ClientSetup {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             BlockEntityRenderers.register(ModBlockEntities.NAV_PROJECTOR.get(), NavProjectorBlockEntityRenderer::new);
+            BlockEntityRenderers.register(ModBlockEntities.VOID_CORE.get(), VoidCoreBlockEntityRenderer::new);
         });
     }
 } 
