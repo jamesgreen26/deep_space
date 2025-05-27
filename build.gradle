@@ -87,6 +87,7 @@ dependencies {
 
     //Cosmos
     compileOnly modImplementation("maven.modrinth:cosmic-horizons-cosmos:0.0.7.2")
+    modImplementation("maven.modrinth:starlance:1.2.3")
 
     //FFAPI
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api:${forge_fabric_api_version}")
