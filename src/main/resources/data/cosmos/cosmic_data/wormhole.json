@@ -1,7 +1,7 @@
 {
   "attached_dimention_id": "deep_space:wormhole",
   "skybox_data": {
-    "texture_id": "skybox_solar",
+    "texture_id": "skybox_wormhole",
     "alpha": 255,
     "yaw": 23,
     "pitch": 23,
