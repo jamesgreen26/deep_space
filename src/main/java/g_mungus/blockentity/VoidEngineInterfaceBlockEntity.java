@@ -58,7 +58,7 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
                             voidEngineInterface.returningDim = level.dimension().location();
                             TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, DeepSpaceMod.WORMHOLE_DIM)), (ServerLevel) level, false);
 
-                            teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(1 / 64.0, new Vector3d()));
+                            teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(1 / 32.0, new Vector3d()));
                         }
                         if (((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks == 100 && !DeepSpaceMod.space_dims.contains(level.dimension().location()) && !level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString())) {
                             explode(level, center);
@@ -67,7 +67,7 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
                     } else if (level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
                         TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, voidEngineInterface.returningDim)), (ServerLevel) level, false);
 
-                        teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(64.0, new Vector3d()));
+                        teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(32.0, new Vector3d()));
                     }
 
                 }

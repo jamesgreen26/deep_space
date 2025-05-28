@@ -72,7 +72,7 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
             shipPos = ship.getWorldAABB().center(new Vector3d());
 
             if (currentDimension.toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString())) {
-                shipPos = shipPos.mul(64.0, new Vector3d());
+                shipPos = shipPos.mul(32.0, new Vector3d());
             }
             poseStack.translate((float) -shipPos.x() / scale_factor, (float) -shipPos.y() / scale_factor, (float) -shipPos.z() / scale_factor);
         }
