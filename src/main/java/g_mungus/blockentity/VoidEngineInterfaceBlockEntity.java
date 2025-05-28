@@ -38,7 +38,9 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
                 Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
                 Vec3 center = pos.getCenter();
                 if (ship == null) {
-                    level.explode(null, center.x, center.y, center.z, 8f, Level.ExplosionInteraction.BLOCK);
+                    if (level.getBlockState(pos).hasProperty(BlockStateProperties.POWERED) && level.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
+                        explode(level, center);
+                    }
                 } else {
                     if (level.getBlockState(pos).hasProperty(BlockStateProperties.POWERED) && level.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
 
@@ -58,8 +60,11 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
 
                             teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(1 / 64.0, new Vector3d()));
                         }
+                        if (((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks == 100 && !DeepSpaceMod.space_dims.contains(level.dimension().location()) && !level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString())) {
+                            explode(level, center);
+                        }
                         return;
-                    } else if (((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks >= 0 && level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
+                    } else if (level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
                         TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, voidEngineInterface.returningDim)), (ServerLevel) level, false);
 
                         teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(64.0, new Vector3d()));
@@ -72,5 +77,9 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
                 ((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks = 0;
             }
         }
+    }
+
+    private static void explode(Level level, Vec3 center) {
+        level.explode(null, center.x, center.y, center.z, 16f, Level.ExplosionInteraction.BLOCK);
     }
 } 
