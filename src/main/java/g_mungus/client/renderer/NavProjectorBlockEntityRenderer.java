@@ -1,25 +1,20 @@
 package g_mungus.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import g_mungus.DeepSpaceMod;
 import g_mungus.blockentity.NavProjectorBlockEntity;
 import g_mungus.data.planet.DisplayablePlanetData;
 import g_mungus.data.planet.PlanetDataStore;
-import kotlin.Suppress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 import org.joml.*;
 import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSClientGameUtils;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.lang.Math;
@@ -29,15 +24,22 @@ import java.util.Objects;
 public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavProjectorBlockEntity> {
     public NavProjectorBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
 
+    ResourceLocation displayDimension = DeepSpaceMod.WORMHOLE_DIM;
+
     @Override
     public void render(NavProjectorBlockEntity blockEntity, float partialTick, PoseStack poseStack,
                       MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.pushPose();
 
-        ResourceLocation dimension = Objects.requireNonNull(blockEntity.getLevel()).dimension().location();
+        ResourceLocation currentDimension = Objects.requireNonNull(blockEntity.getLevel()).dimension().location();
+
+        if (!currentDimension.toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString())) {
+            displayDimension = currentDimension;
+        }
+
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-        List<DisplayablePlanetData> planetData = PlanetDataStore.data.getOrDefault(dimension, List.of());
+        List<DisplayablePlanetData> planetData = PlanetDataStore.data.getOrDefault(displayDimension, List.of());
         
         // Move to center of block
         poseStack.translate(0.5D, 1.5D, 0.5D);
@@ -68,6 +70,10 @@ public class NavProjectorBlockEntityRenderer implements BlockEntityRenderer<NavP
             Quaterniondc rot = ship.getTransform().getShipToWorldRotation().invert(new Quaterniond());
             poseStack.mulPose(new Quaternionf(rot.x(), rot.y(), rot.z(), rot.w()));
             shipPos = ship.getWorldAABB().center(new Vector3d());
+
+            if (currentDimension.toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString())) {
+                shipPos = shipPos.mul(64.0, new Vector3d());
+            }
             poseStack.translate((float) -shipPos.x() / scale_factor, (float) -shipPos.y() / scale_factor, (float) -shipPos.z() / scale_factor);
         }
 
