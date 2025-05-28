@@ -59,7 +59,7 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
                             teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(1 / 64.0, new Vector3d()));
                         }
                         return;
-                    } else if (((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks > 200 && level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
+                    } else if (((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks >= 0 && level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
                         TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, voidEngineInterface.returningDim)), (ServerLevel) level, false);
 
                         teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(64.0, new Vector3d()));
