@@ -1,5 +1,6 @@
 package g_mungus.blockentity;
 
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import g_mungus.DeepSpaceMod;
 import g_mungus.block.VoidCoreBlock;
 import g_mungus.sound.ModSounds;
@@ -8,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -28,9 +30,10 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class VoidEngineInterfaceBlockEntity extends BlockEntity {
-    private static final int MAX_ENERGY = 1000;
+public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHaveGoggleInformation {
+    private static final int MAX_ENERGY = 4096;
     private static final int ENERGY_PER_TICK = 128;
     private final EnergyStorage energyStorage = new EnergyStorage(MAX_ENERGY);
     private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(() -> energyStorage);
@@ -42,6 +45,20 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
     private int chargeUpTicks = 0;
     boolean active = false;
     private ResourceLocation returningDim = ResourceLocation.fromNamespaceAndPath("cosmos", "solar_system");
+
+    @Override
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+
+        int stored = energyStorage.getEnergyStored();
+        int capacity = energyStorage.getMaxEnergyStored();
+        int usage = level != null && level.getBlockState(worldPosition).getValue(BlockStateProperties.POWERED) ? ENERGY_PER_TICK : 0;
+
+        tooltip.add(Component.literal("    §7Energy: §f" + stored + "§7/§f" + capacity + "§7 FE"));
+        tooltip.add(Component.literal("    §7Usage: §f" + usage + "§7 FE/t"));
+        tooltip.add(Component.literal("    §7Status: §f" + (level != null && level.getBlockState(worldPosition).getValue(BlockStateProperties.POWERED) ? "Active" : "Inactive")));
+
+        return true;
+    }
 
     @Nonnull
     @Override
