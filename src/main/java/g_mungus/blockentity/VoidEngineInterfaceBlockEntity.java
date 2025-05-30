@@ -49,11 +49,8 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHave
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 
-        int stored = energyStorage.getEnergyStored();
-        int capacity = energyStorage.getMaxEnergyStored();
         int usage = level != null && level.getBlockState(worldPosition).getValue(BlockStateProperties.POWERED) ? ENERGY_PER_TICK : 0;
 
-        tooltip.add(Component.literal("    §7Energy: §f" + stored + "§7/§f" + capacity + "§7 FE"));
         tooltip.add(Component.literal("    §7Usage: §f" + usage + "§7 FE/t"));
         tooltip.add(Component.literal("    §7Status: §f" + (level != null && level.getBlockState(worldPosition).getValue(BlockStateProperties.POWERED) ? "Active" : "Inactive")));
 
