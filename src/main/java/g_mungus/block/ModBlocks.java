@@ -37,4 +37,10 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> VOID_ENGINE_VIEWPORT = BLOCKS.register("void_engine_viewport",
         () -> new VoidEngineViewportBlock());
+
+    public static final RegistryObject<Block> CABLE = BLOCKS.register("cable",
+        () -> new CableBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            .strength(2.0f)
+            .requiresCorrectToolForDrops()
+            .noOcclusion()));
 } 
