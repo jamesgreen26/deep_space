@@ -5,7 +5,9 @@ import g_mungus.block.VoidCoreBlock;
 import g_mungus.sound.ModSounds;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -15,24 +17,75 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class VoidEngineInterfaceBlockEntity extends BlockEntity {
+    private static final int MAX_ENERGY = 1000;
+    private static final int ENERGY_PER_TICK = 128;
+    private final EnergyStorage energyStorage = new EnergyStorage(MAX_ENERGY);
+    private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(() -> energyStorage);
 
     public VoidEngineInterfaceBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.VOID_ENGINE_INTERFACE.get(), pos, state);
     }
 
     private int chargeUpTicks = 0;
-
     boolean active = false;
-
     private ResourceLocation returningDim = ResourceLocation.fromNamespaceAndPath("cosmos", "solar_system");
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ENERGY) {
+            return energyCapability.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        energyStorage.deserializeNBT(tag.get("energy"));
+        chargeUpTicks = tag.getInt("chargeUpTicks");
+        active = tag.getBoolean("active");
+        returningDim = ResourceLocation.parse(tag.getString("returningDim"));
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("energy", energyStorage.serializeNBT());
+        tag.putInt("chargeUpTicks", chargeUpTicks);
+        tag.putBoolean("active", active);
+        tag.putString("returningDim", returningDim.toString());
+    }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T blockEntity) {
         if (blockEntity instanceof VoidEngineInterfaceBlockEntity voidEngineInterface) {
+            // Try to receive energy from adjacent blocks
+            if (voidEngineInterface.energyStorage.getEnergyStored() < voidEngineInterface.energyStorage.getMaxEnergyStored()) {
+                for (Direction direction : Direction.values()) {
+                    BlockEntity neighbor = level.getBlockEntity(pos.relative(direction));
+                    if (neighbor != null) {
+                        neighbor.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite()).ifPresent(energy -> {
+                            int toExtract = Math.min(128, voidEngineInterface.energyStorage.getMaxEnergyStored() - voidEngineInterface.energyStorage.getEnergyStored());
+                            int extracted = energy.extractEnergy(toExtract, false);
+                            voidEngineInterface.energyStorage.receiveEnergy(extracted, false);
+                        });
+                    }
+                }
+            }
+
             BlockState core = level.getBlockState(pos.offset(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal().multiply(-1)));
             if (core.hasProperty(VoidCoreBlock.DORMANT) && !core.getValue(VoidCoreBlock.DORMANT)) {
                 Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
@@ -43,6 +96,17 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
                     }
                 } else {
                     if (level.getBlockState(pos).hasProperty(BlockStateProperties.POWERED) && level.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
+                        // Check if we have enough energy
+                        if (voidEngineInterface.energyStorage.getEnergyStored() < ENERGY_PER_TICK) {
+                            if (level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
+                                TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, voidEngineInterface.returningDim)), (ServerLevel) level, false);
+
+                                teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(32.0, new Vector3d()));
+                            }
+                            return;
+                        }
+                        // Consume energy
+                        voidEngineInterface.energyStorage.extractEnergy(ENERGY_PER_TICK, false);
 
                         Vector3d worldPos = ship.getShipToWorld().transformPosition(center.x, center.y, center.z, new Vector3d());
 
@@ -69,7 +133,6 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity {
 
                         teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(32.0, new Vector3d()));
                     }
-
                 }
             }
             if (voidEngineInterface.active) {
