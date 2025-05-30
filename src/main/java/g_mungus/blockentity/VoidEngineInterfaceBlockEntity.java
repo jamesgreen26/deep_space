@@ -33,13 +33,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHaveGoggleInformation {
-    private static final int MAX_ENERGY = 4096;
+    private static final int MAX_ENERGY = 8192;
     private static final int ENERGY_PER_TICK = 1024;
     private final EnergyStorage energyStorage = new EnergyStorage(MAX_ENERGY);
     private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(() -> energyStorage);
 
     public VoidEngineInterfaceBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.VOID_ENGINE_INTERFACE.get(), pos, state);
+        if (this.level != null && this.level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString())) {
+            energyStorage.receiveEnergy(8192, false);
+        }
     }
 
     private int chargeUpTicks = 0;
@@ -109,21 +112,7 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHave
                         explode(level, center);
                     }
                 } else {
-                    if (level.getBlockState(pos).hasProperty(BlockStateProperties.POWERED) && level.getBlockState(pos).getValue(BlockStateProperties.POWERED)) {
-                        // Check if we have enough energy
-                        if (voidEngineInterface.energyStorage.getEnergyStored() < ENERGY_PER_TICK) {
-                            if (level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
-                                TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, voidEngineInterface.returningDim)), (ServerLevel) level, false);
-
-                                teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(32.0, new Vector3d()));
-                            }
-
-                            voidEngineInterface.active = false;
-                            ((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks = 0;
-
-                            return;
-                        }
-                        // Consume energy
+                    if (level.getBlockState(pos).hasProperty(BlockStateProperties.POWERED) && level.getBlockState(pos).getValue(BlockStateProperties.POWERED) && voidEngineInterface.energyStorage.getEnergyStored() >= ENERGY_PER_TICK) {
                         voidEngineInterface.energyStorage.extractEnergy(ENERGY_PER_TICK, false);
 
                         Vector3d worldPos = ship.getShipToWorld().transformPosition(center.x, center.y, center.z, new Vector3d());
@@ -146,7 +135,7 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHave
                             explode(level, center);
                         }
                         return;
-                    } else if (level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null && voidEngineInterface.active) {
+                    } else if (level.dimension().location().toString().equals(DeepSpaceMod.WORMHOLE_DIM.toString()) && level.getServer() != null) {
                         TeleportationHandler teleportationHandler = new TeleportationHandler(level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, voidEngineInterface.returningDim)), (ServerLevel) level, false);
 
                         teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(32.0, new Vector3d()));
