@@ -83,13 +83,13 @@ public class CableBlock extends Block implements CanConnectCables {
         }
     }
 
-    private @NotNull BlockState getNewBlockState(BlockState state, Level level, BlockPos pos) {
-        boolean north = canConnect(level, pos.north(), Direction.SOUTH);
-        boolean south = canConnect(level, pos.south(), Direction.NORTH);
-        boolean east = canConnect(level, pos.east(), Direction.WEST);
-        boolean west = canConnect(level, pos.west(), Direction.EAST);
-        boolean up = canConnect(level, pos.above(), Direction.DOWN);
-        boolean down = canConnect(level, pos.below(), Direction.UP);
+    @NotNull BlockState getNewBlockState(BlockState state, Level level, BlockPos pos) {
+        boolean north = canFormConnection(state, level, pos, Direction.NORTH);
+        boolean south = canFormConnection(state, level, pos, Direction.SOUTH);
+        boolean east = canFormConnection(state, level, pos, Direction.EAST);
+        boolean west = canFormConnection(state, level, pos, Direction.WEST);
+        boolean up = canFormConnection(state, level, pos, Direction.UP);
+        boolean down = canFormConnection(state, level, pos, Direction.DOWN);
 
         return state
                 .setValue(NORTH, north)
@@ -100,14 +100,20 @@ public class CableBlock extends Block implements CanConnectCables {
                 .setValue(DOWN, down);
     }
 
-    private boolean canConnect(Level level, BlockPos pos, Direction direction) {
+    private boolean canFormConnection(BlockState state, Level level, BlockPos pos, Direction direction) {
+        boolean shouldConnectToThis = shouldCablesConnectToThis(state, direction);
+        boolean shouldConnectToOther = otherCanConnect(level, pos.offset(direction.getNormal()), direction.getOpposite());
+        return shouldConnectToThis && shouldConnectToOther;
+    }
+
+    private boolean otherCanConnect(Level level, BlockPos pos, Direction direction) {
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
-        return (block instanceof CanConnectCables && ((CanConnectCables) block).canConnectCable(state, direction));
+        return (block instanceof CanConnectCables && ((CanConnectCables) block).shouldCablesConnectToThis(state, direction));
     }
 
     @Override
-    public boolean canConnectCable(BlockState blockState, Direction direction) {
+    public boolean shouldCablesConnectToThis(BlockState blockState, Direction direction) {
         return true;
     }
 }
