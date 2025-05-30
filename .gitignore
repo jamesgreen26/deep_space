@@ -3,6 +3,7 @@
 build/
 lib/
 run/
+bin/
 run-data/
 .settings/
 .project
