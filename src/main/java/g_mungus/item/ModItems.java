@@ -35,4 +35,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> STEPDOWN_TRANSFORMER = ITEMS.register("stepdown_transformer",
             () -> new BlockItem(ModBlocks.STEPDOWN_TRANSFORMER.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> REDSTONE_CONVERTER = ITEMS.register("redstone_converter",
+            () -> new BlockItem(ModBlocks.REDSTONE_CONVERTER.get(), new Item.Properties()));
 } 
