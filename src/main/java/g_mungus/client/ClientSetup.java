@@ -2,6 +2,7 @@ package g_mungus.client;
 
 import g_mungus.DeepSpaceMod;
 import g_mungus.blockentity.ModBlockEntities;
+import g_mungus.client.ponder.PonderRegistry;
 import g_mungus.client.renderer.NavProjectorBlockEntityRenderer;
 import g_mungus.client.renderer.VoidCoreBlockEntityRenderer;
 import g_mungus.client.renderer.VoidEngineInterfaceBlockEntityRenderer;
@@ -19,6 +20,8 @@ public class ClientSetup {
             BlockEntityRenderers.register(ModBlockEntities.NAV_PROJECTOR.get(), NavProjectorBlockEntityRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.VOID_CORE.get(), VoidCoreBlockEntityRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.VOID_ENGINE_INTERFACE.get(), VoidEngineInterfaceBlockEntityRenderer::new);
+
+            PonderRegistry.register();
         });
     }
 } 

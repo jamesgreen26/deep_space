@@ -11,5 +11,14 @@
     "item.deep_space.void_core": "Void Core",
     "item.deep_space.void_engine_viewport": "Void Engine Viewport",
 
-    "creativetab.deep_space_tab": "Deep Space"
+    "creativetab.deep_space_tab": "Deep Space",
+    "deep_space.ponder.void_engine.header": "Void Engine",
+    "deep_space.ponder.void_engine.text_1": "Build your Void Engine on a ship.",
+    "deep_space.ponder.void_engine.text_2": "Build a 3x3 cube from Engine Frames and Engine Viewports.\nPlace a Void Core in the middle.",
+    "deep_space.ponder.void_engine.text_3": "Add a Void Engine Interface. The Void Core will wake up.",
+    "deep_space.ponder.void_engine.text_4": "With the Void Engine complete, you can fast-travel through the Wormhole dimension.",
+    "deep_space.ponder.void_engine.text_5": "To do this, supply the interface with a supply of FE, and a redstone signal."
+
+
+
 } 
