@@ -17,11 +17,10 @@ public class TransformerBlock extends CableBlock {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
 
-    private static final VoxelShape NORTH_SHAPE = Block.box(6, 6, 0, 10, 10, 6);
-    private static final VoxelShape SOUTH_SHAPE = Block.box(6, 6, 10, 10, 10, 16);
-    private static final VoxelShape EAST_SHAPE = Block.box(10, 6, 6, 16, 10, 10);
-    private static final VoxelShape WEST_SHAPE = Block.box(0, 6, 6, 6, 10, 10);
-
+    private static final VoxelShape NORTH_SHAPE = Block.box(1, 1, 0, 15, 15, 4);
+    private static final VoxelShape SOUTH_SHAPE = Block.box(1, 1, 12, 15, 15, 16);
+    private static final VoxelShape EAST_SHAPE = Block.box(12, 1, 1, 16, 15, 15);
+    private static final VoxelShape WEST_SHAPE = Block.box(0, 1, 1, 4, 15, 15);
     private static final VoxelShape UP_SHAPE = Block.box(1, 12, 1, 15, 16, 15);
     private static final VoxelShape DOWN_SHAPE = Block.box(1, 0, 1, 15, 4, 15);
 
@@ -66,7 +65,11 @@ public class TransformerBlock extends CableBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext arg) {
-        return getNewBlockState(defaultBlockState().setValue(FACING, arg.getClickedFace().getOpposite()), arg.getLevel(), arg.getClickedPos());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction facing = context.getNearestLookingDirection();
+        if (context.getPlayer() != null && context.getPlayer().isCrouching()) {
+            facing = facing.getOpposite();
+        }
+        return getNewBlockState(defaultBlockState().setValue(FACING, facing), context.getLevel(), context.getClickedPos());
     }
 }
