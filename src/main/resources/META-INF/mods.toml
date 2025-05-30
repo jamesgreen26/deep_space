@@ -1,15 +1,15 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "Apache 2.0"
 
 [[mods]]
 modId = "deep_space"
 version = "${version}"
 displayName = "Deep Space"
-authors = "Me!"
+authors = "G_Mungus"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Starlance Addon
 '''
 #logoFile = ""
 
