@@ -51,4 +51,10 @@ public class ModBlocks {
                     .strength(2.0f)
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
+
+    public static final RegistryObject<Block> STEPDOWN_TRANSFORMER = BLOCKS.register("stepdown_transformer",
+            () -> new TransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+                    .strength(2.0f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()));
 } 

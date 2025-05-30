@@ -29,4 +29,10 @@ public class ModItems {
 
     public static final RegistryObject<Item> CABLE = ITEMS.register("cable",
         () -> new BlockItem(ModBlocks.CABLE.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> STEPUP_TRANSFORMER = ITEMS.register("stepup_transformer",
+            () -> new BlockItem(ModBlocks.STEPUP_TRANSFORMER.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> STEPDOWN_TRANSFORMER = ITEMS.register("stepdown_transformer",
+            () -> new BlockItem(ModBlocks.STEPDOWN_TRANSFORMER.get(), new Item.Properties()));
 } 
