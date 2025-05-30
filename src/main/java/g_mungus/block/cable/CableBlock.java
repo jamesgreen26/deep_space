@@ -1,6 +1,8 @@
-package g_mungus.block;
+package g_mungus.block.cable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -10,8 +12,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class CableBlock extends Block {
+public class CableBlock extends Block implements CanConnectCables {
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
     public static final BooleanProperty SOUTH = BooleanProperty.create("south");
     public static final BooleanProperty EAST = BooleanProperty.create("east");
@@ -57,6 +61,13 @@ public class CableBlock extends Block {
         return shape;
     }
 
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext arg) {
+        BlockState blockState = this.defaultBlockState();
+        return getNewBlockState(blockState, arg.getLevel(), arg.getClickedPos());
+    }
+
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         if (!level.isClientSide) {
@@ -65,29 +76,38 @@ public class CableBlock extends Block {
     }
 
     private void updateConnections(BlockState state, Level level, BlockPos pos) {
-        boolean north = canConnect(level, pos.north());
-        boolean south = canConnect(level, pos.south());
-        boolean east = canConnect(level, pos.east());
-        boolean west = canConnect(level, pos.west());
-        boolean up = canConnect(level, pos.above());
-        boolean down = canConnect(level, pos.below());
-
-        BlockState newState = state
-                .setValue(NORTH, north)
-                .setValue(SOUTH, south)
-                .setValue(EAST, east)
-                .setValue(WEST, west)
-                .setValue(UP, up)
-                .setValue(DOWN, down);
+        BlockState newState = getNewBlockState(state, level, pos);
 
         if (!state.equals(newState)) {
             level.setBlock(pos, newState, 3);
         }
     }
 
-    private boolean canConnect(Level level, BlockPos pos) {
-        BlockState state = level.getBlockState(pos);
-        // For now, we'll connect to any block. Later we can add specific checks for energy-capable blocks
-        return !state.isAir();
+    private @NotNull BlockState getNewBlockState(BlockState state, Level level, BlockPos pos) {
+        boolean north = canConnect(level, pos.north(), Direction.SOUTH);
+        boolean south = canConnect(level, pos.south(), Direction.NORTH);
+        boolean east = canConnect(level, pos.east(), Direction.WEST);
+        boolean west = canConnect(level, pos.west(), Direction.EAST);
+        boolean up = canConnect(level, pos.above(), Direction.DOWN);
+        boolean down = canConnect(level, pos.below(), Direction.UP);
+
+        return state
+                .setValue(NORTH, north)
+                .setValue(SOUTH, south)
+                .setValue(EAST, east)
+                .setValue(WEST, west)
+                .setValue(UP, up)
+                .setValue(DOWN, down);
     }
-} 
+
+    private boolean canConnect(Level level, BlockPos pos, Direction direction) {
+        BlockState state = level.getBlockState(pos);
+        Block block = state.getBlock();
+        return (block instanceof CanConnectCables && ((CanConnectCables) block).canConnectCable(state, direction));
+    }
+
+    @Override
+    public boolean canConnectCable(BlockState blockState, Direction direction) {
+        return true;
+    }
+}

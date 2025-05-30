@@ -1,6 +1,7 @@
 package g_mungus.block;
 
 import g_mungus.DeepSpaceMod;
+import g_mungus.block.cable.CableBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
