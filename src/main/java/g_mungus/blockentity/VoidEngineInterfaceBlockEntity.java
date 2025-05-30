@@ -34,7 +34,7 @@ import java.util.List;
 
 public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHaveGoggleInformation {
     private static final int MAX_ENERGY = 4096;
-    private static final int ENERGY_PER_TICK = 128;
+    private static final int ENERGY_PER_TICK = 1024;
     private final EnergyStorage energyStorage = new EnergyStorage(MAX_ENERGY);
     private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(() -> energyStorage);
 
@@ -117,6 +117,10 @@ public class VoidEngineInterfaceBlockEntity extends BlockEntity implements IHave
 
                                 teleportationHandler.handleTeleport(ship, ship.getTransform().getPositionInWorld().mul(32.0, new Vector3d()));
                             }
+
+                            voidEngineInterface.active = false;
+                            ((VoidEngineInterfaceBlockEntity) blockEntity).chargeUpTicks = 0;
+
                             return;
                         }
                         // Consume energy
