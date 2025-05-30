@@ -6,7 +6,7 @@
     "settings": "deep_space:wormhole",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:the_void"
+      "biome": "deep_space:wormhole"
     }
   }
 }
