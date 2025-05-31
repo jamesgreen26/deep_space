@@ -24,6 +24,10 @@ public class CreateCompat {
     }
 
     private static void setup(FMLCommonSetupEvent event) {
+        registerDisplayLinkBehavior(event);
+    }
+
+    private static void registerDisplayLinkBehavior(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             // Register first display source
             ResourceLocation id1 = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_display_source_1");
@@ -33,7 +37,25 @@ public class CreateCompat {
                     List<MutableComponent> text = new ArrayList<>();
                     BlockEntity blockEntity = context.getSourceBlockEntity();
                     if (blockEntity instanceof NavProjectorBlockEntity) {
-                        text.add(Components.literal("Nav Projector"));
+
+
+                        boolean displayPrefix = stats.maxColumns() > 14;
+                        boolean displaySuffix = stats.maxColumns() > 8;
+                        String prefix = "Speed: ";
+                        String suffix = " Km/h";
+
+                        double speed = ((NavProjectorBlockEntity) blockEntity).getCurrentSpeed();
+                        double KM_PH = ((int)(speed * 36)) / 10.0;
+                        if (KM_PH >= 100 && !displayPrefix) {
+                            KM_PH = ((int)KM_PH);
+                        }
+
+                        String output = "";
+                        if (displayPrefix) output += prefix;
+                        output += KM_PH;
+                        if (displaySuffix) output += suffix;
+
+                        text.add(Components.literal(output));
                     }
                     return text;
                 }
