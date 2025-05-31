@@ -85,9 +85,8 @@ public class CableBlock extends Block implements CanConnectCables, CableNetworkC
 
         if (!state.equals(newState)) {
             level.setBlock(pos, newState, 3);
+            updateNetwork(pos, level);
         }
-
-        updateNetwork(pos, level);
     }
 
     @NotNull
