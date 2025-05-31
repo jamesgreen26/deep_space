@@ -15,5 +15,13 @@ public abstract class TransformerBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
-    public Map<BlockPos, TransformerBlock.TransformerType> transformers = new HashMap<>();
+    private Map<BlockPos, TransformerBlock.TransformerType> transformers = new HashMap<>();
+
+    public void updateTransformers(Map<BlockPos, TransformerBlock.TransformerType> transformers) {
+        this.transformers = transformers;
+    }
+
+    public Map<BlockPos, TransformerBlock.TransformerType> getTransformers() {
+        return transformers;
+    }
 }

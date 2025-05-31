@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
@@ -26,12 +27,22 @@ public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
         return currentSuppliedSignal;
     }
 
+    @Override
+    public void updateTransformers(Map<BlockPos, TransformerBlock.TransformerType> transformers) {
+        super.updateTransformers(transformers);
+        updateAllSignals();
+    }
+
     public void supplySignal(int strength) {
         if (currentSuppliedSignal == strength) return;
         currentSuppliedSignal = strength;
+        updateAllSignals();
+    }
+
+    private void updateAllSignals() {
         AtomicInteger maxSuppliedSignal = new AtomicInteger();
         if (level != null) {
-            transformers.forEach((blockPos, transformerType) -> {
+            getTransformers().forEach((blockPos, transformerType) -> {
                 if (transformerType.equals(TransformerBlock.TransformerType.REDSTONE)) {
                     BlockEntity blockEntity = level.getBlockEntity(blockPos);
                     if (blockEntity instanceof RedstoneConverterBlockEntity) {
@@ -43,7 +54,7 @@ public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
                 }
             });
 
-            transformers.forEach((blockPos, transformerType) -> {
+            getTransformers().forEach((blockPos, transformerType) -> {
                 if (transformerType.equals(TransformerBlock.TransformerType.REDSTONE)) {
                     BlockEntity blockEntity = level.getBlockEntity(blockPos);
                     if (blockEntity instanceof RedstoneConverterBlockEntity) {

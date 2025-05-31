@@ -35,7 +35,7 @@ public interface CableNetworkComponent {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
 
             if (blockEntity instanceof TransformerBlockEntity) {
-                ((TransformerBlockEntity) blockEntity).transformers = transformers;
+                ((TransformerBlockEntity) blockEntity).updateTransformers(transformers);
             }
         });
     }
