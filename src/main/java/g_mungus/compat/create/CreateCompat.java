@@ -25,8 +25,9 @@ public class CreateCompat {
 
     private static void setup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_display_source");
-            DisplaySource navProjectorSource = new DisplaySource() {
+            // Register first display source
+            ResourceLocation id1 = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_display_source_1");
+            DisplaySource navProjectorSource1 = new DisplaySource() {
                 @Override
                 public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
                     List<MutableComponent> text = new ArrayList<>();
@@ -37,8 +38,25 @@ public class CreateCompat {
                     return text;
                 }
             };
-            DisplayBehaviour registered = AllDisplayBehaviours.register(id, navProjectorSource);
-            AllDisplayBehaviours.assignBlockEntity(registered, ModBlockEntities.NAV_PROJECTOR.get());
+            DisplayBehaviour registered1 = AllDisplayBehaviours.register(id1, navProjectorSource1);
+            AllDisplayBehaviours.assignBlockEntity(registered1, ModBlockEntities.NAV_PROJECTOR.get());
+
+            // Register second display source
+            ResourceLocation id2 = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_display_source_2");
+            DisplaySource navProjectorSource2 = new DisplaySource() {
+                @Override
+                public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
+                    List<MutableComponent> text = new ArrayList<>();
+                    BlockEntity blockEntity = context.getSourceBlockEntity();
+                    if (blockEntity instanceof NavProjectorBlockEntity) {
+                        text.add(Components.literal("Nav Projector Info"));
+                        text.add(Components.literal("More info coming soon..."));
+                    }
+                    return text;
+                }
+            };
+            DisplayBehaviour registered2 = AllDisplayBehaviours.register(id2, navProjectorSource2);
+            AllDisplayBehaviours.assignBlockEntity(registered2, ModBlockEntities.NAV_PROJECTOR.get());
         });
     }
 } 
