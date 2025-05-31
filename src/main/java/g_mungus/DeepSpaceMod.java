@@ -2,6 +2,7 @@ package g_mungus;
 
 import g_mungus.block.ModBlocks;
 import g_mungus.blockentity.ModBlockEntities;
+import g_mungus.compat.create.CreateCompat;
 import g_mungus.data.planet.PlanetDataScanner;
 import g_mungus.item.ModCreativeTabs;
 import g_mungus.item.ModItems;
@@ -51,5 +52,7 @@ public final class DeepSpaceMod {
         ModSounds.SOUND_EVENTS.register(modEventBus);
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new PlanetDataScanner());
+
+        CreateCompat.init(context);
     }
 }
