@@ -56,7 +56,9 @@ public class RedstoneConverterBlock extends TransformerBlock {
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
-        int power = level.getSignal(pos.offset(state.getValue(TransformerBlock.FACING).getNormal()), state.getValue(TransformerBlock.FACING).getOpposite());
+        Direction facing = state.getValue(TransformerBlock.FACING);
+        BlockPos sourcePos = pos.offset(facing.getNormal());
+        int power = level.getDirectSignal(sourcePos, facing);
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof RedstoneConverterBlockEntity) {
