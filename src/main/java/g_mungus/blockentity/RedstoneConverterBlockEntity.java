@@ -27,6 +27,7 @@ public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
     }
 
     public void supplySignal(int strength) {
+        if (currentSuppliedSignal == strength) return;
         currentSuppliedSignal = strength;
         AtomicInteger maxSuppliedSignal = new AtomicInteger();
         if (level != null) {
@@ -62,10 +63,5 @@ public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
         Block block = state.getBlock();
 
         level.updateNeighborsAt(pos, block);
-
-//        if (block instanceof RedstoneConverterBlock) {
-//            BlockPos neighborPos = ((RedstoneConverterBlock) block).getFacingPos(pos, state);
-//            level.updateNeighborsAt(neighborPos, level.getBlockState(neighborPos).getBlock());
-//        }
     }
 } 
