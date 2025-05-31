@@ -1,8 +1,10 @@
 package g_mungus.block.cableNetwork;
 
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
+import g_mungus.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -61,5 +63,31 @@ public class DenseCableSeparatorBlock extends Block implements CanConnectCables 
     @Override
     public boolean shouldCablesConnectToThis(BlockState blockState, Direction direction) {
         return blockState.getValue(FACING).getAxis() != direction.getAxis();
+    }
+
+    public BlockPos getPosForChannel(QuadCableNetworkComponent.Channel channel, BlockPos separator, BlockState state) {
+        if (!state.is(ModBlocks.DENSE_CABLE_SEPARATOR.get())) return separator;
+        Direction facing = state.getValue(FACING);
+        int rotation = state.getValue(ROTATION);
+
+        Vec3i c0;
+        if (!facing.getAxis().equals(Direction.Axis.Y)) {
+            c0 = Direction.UP.getNormal();
+        } else if (facing.equals(Direction.UP)) {
+            c0 = Direction.SOUTH.getNormal();
+        } else {
+            c0 = Direction.NORTH.getNormal();
+        }
+
+        int index = (8 + channel.getIndex() - rotation) % 4;
+
+        Vec3i selected = switch (index) {
+            default -> c0;
+            case 1 -> facing.getNormal().cross(c0).multiply(-1);
+            case 2 -> c0.multiply(-1);
+            case 3 -> facing.getNormal().cross(c0);
+        };
+
+        return separator.offset(selected);
     }
 }
