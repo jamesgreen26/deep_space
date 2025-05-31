@@ -2,6 +2,7 @@ package g_mungus.block.cableNetwork;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -15,7 +16,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CableBlock extends Block implements CanConnectCables {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class CableBlock extends Block implements CanConnectCables, CableNetworkComponent {
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
     public static final BooleanProperty SOUTH = BooleanProperty.create("south");
     public static final BooleanProperty EAST = BooleanProperty.create("east");
@@ -50,14 +55,14 @@ public class CableBlock extends Block implements CanConnectCables {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         VoxelShape shape = CORE;
-        
+
         if (state.getValue(NORTH)) shape = Shapes.or(shape, NORTH_SHAPE);
         if (state.getValue(SOUTH)) shape = Shapes.or(shape, SOUTH_SHAPE);
         if (state.getValue(EAST)) shape = Shapes.or(shape, EAST_SHAPE);
         if (state.getValue(WEST)) shape = Shapes.or(shape, WEST_SHAPE);
         if (state.getValue(UP)) shape = Shapes.or(shape, UP_SHAPE);
         if (state.getValue(DOWN)) shape = Shapes.or(shape, DOWN_SHAPE);
-        
+
         return shape;
     }
 
@@ -81,9 +86,12 @@ public class CableBlock extends Block implements CanConnectCables {
         if (!state.equals(newState)) {
             level.setBlock(pos, newState, 3);
         }
+
+        updateNetwork(pos, level);
     }
 
-    @NotNull BlockState getNewBlockState(BlockState state, Level level, BlockPos pos) {
+    @NotNull
+    BlockState getNewBlockState(BlockState state, Level level, BlockPos pos) {
         boolean north = canFormConnection(state, level, pos, Direction.NORTH);
         boolean south = canFormConnection(state, level, pos, Direction.SOUTH);
         boolean east = canFormConnection(state, level, pos, Direction.EAST);
@@ -115,5 +123,36 @@ public class CableBlock extends Block implements CanConnectCables {
     @Override
     public boolean shouldCablesConnectToThis(BlockState blockState, Direction direction) {
         return true;
+    }
+
+    @Override
+    public List<BlockPos> getConnectedPositions(Level level, BlockPos selfPos) {
+        List<BlockPos> connections = new ArrayList<>();
+        BlockState state = level.getBlockState(selfPos);
+
+        if (state.getBlock() instanceof CableBlock) {
+            if (state.getValue(UP)) {
+                connections.add(selfPos.above());
+            }
+            if (state.getValue(DOWN)) {
+                connections.add(selfPos.below());
+            }
+            if (state.getValue(NORTH)) {
+                connections.add(selfPos.north());
+            }
+            if (state.getValue(SOUTH)) {
+                connections.add(selfPos.south());
+            }
+            if (state.getValue(EAST)) {
+                connections.add(selfPos.east());
+            }
+            if (state.getValue(WEST)) {
+                connections.add(selfPos.west());
+            }
+        }
+
+        return connections.stream().filter(pos ->
+            level.getBlockState(pos).getBlock() instanceof CableNetworkComponent
+        ).toList();
     }
 }

@@ -1,14 +1,27 @@
 package g_mungus.block.cableNetwork;
 
 import g_mungus.block.ModBlocks;
+import g_mungus.blockentity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public final class RedstoneConverterBlock extends TransformerBlock {
+public class RedstoneConverterBlock extends TransformerBlock {
+    @Override
+    public TransformerType getTransformerType() {
+        return TransformerType.REDSTONE;
+    }
+
     public RedstoneConverterBlock(Properties properties) {
         super(properties);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModBlockEntities.REDSTONE_CONVERTER.get().create(pos, state);
     }
 
     @Override

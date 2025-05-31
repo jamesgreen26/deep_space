@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -13,7 +14,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public abstract sealed class TransformerBlock extends CableBlock permits RedstoneConverterBlock, StepdownTransformerBlock, StepupTransformerBlock {
+public abstract class TransformerBlock extends CableBlock implements EntityBlock {
+
+    public enum TransformerType {
+        STEPUP, STEPDOWN, REDSTONE;
+    }
+
+    public abstract TransformerType getTransformerType();
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
 

@@ -25,4 +25,19 @@ public class ModBlockEntities {
         BLOCK_ENTITIES.register("void_core", 
             () -> BlockEntityType.Builder.of(VoidCoreBlockEntity::new, 
                 ModBlocks.VOID_CORE.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<RedstoneConverterBlockEntity>> REDSTONE_CONVERTER = 
+        BLOCK_ENTITIES.register("redstone_converter", 
+            () -> BlockEntityType.Builder.of(RedstoneConverterBlockEntity::new, 
+                ModBlocks.REDSTONE_CONVERTER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<StepUpTransformerBlockEntity>> STEPUP_TRANSFORMER = 
+        BLOCK_ENTITIES.register("stepup_transformer", 
+            () -> BlockEntityType.Builder.of(StepUpTransformerBlockEntity::new, 
+                ModBlocks.STEPUP_TRANSFORMER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<StepDownTransformerBlockEntity>> STEPDOWN_TRANSFORMER = 
+        BLOCK_ENTITIES.register("stepdown_transformer", 
+            () -> BlockEntityType.Builder.of(StepDownTransformerBlockEntity::new, 
+                ModBlocks.STEPDOWN_TRANSFORMER.get()).build(null));
 } 
