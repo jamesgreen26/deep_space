@@ -60,8 +60,12 @@ public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
 
         BlockPos pos = getBlockPos();
         BlockState state = level.getBlockState(pos);
-        Block block = state.getBlock();
 
-        level.updateNeighborsAt(pos, block);
+        if (!state.is(ModBlocks.REDSTONE_CONVERTER.get())) {
+            level.updateNeighborsAt(pos, state.getBlock());
+        } else {
+            BlockPos neighborPos = TransformerBlock.getFacingPos(pos, state);
+            level.updateNeighborsAt(neighborPos, level.getBlockState(neighborPos).getBlock());
+        }
     }
 } 
