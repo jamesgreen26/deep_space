@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "deep_space:block/dense_cables_end",
+    "side": "deep_space:block/dense_cables_side"
+  }
+}

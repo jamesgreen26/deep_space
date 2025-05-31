@@ -46,6 +46,12 @@ public class ModBlocks {
             .requiresCorrectToolForDrops()
             .noOcclusion()));
 
+    public static final RegistryObject<Block> DENSE_CABLES = BLOCKS.register("dense_cables",
+        () -> new DenseCablesBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            .strength(2.5f)
+            .requiresCorrectToolForDrops()
+            .noOcclusion()));
+
     public static final RegistryObject<Block> STEPUP_TRANSFORMER = BLOCKS.register("stepup_transformer",
             () -> new TransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(2.0f)
