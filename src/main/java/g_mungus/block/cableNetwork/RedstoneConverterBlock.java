@@ -3,12 +3,15 @@ package g_mungus.block.cableNetwork;
 import g_mungus.DeepSpaceMod;
 import g_mungus.block.ModBlocks;
 import g_mungus.blockentity.ModBlockEntities;
+import g_mungus.blockentity.RedstoneConverterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneConverterBlock extends TransformerBlock {
@@ -37,9 +40,27 @@ public class RedstoneConverterBlock extends TransformerBlock {
     }
 
     @Override
+    public int getDirectSignal(@NotNull BlockState state, BlockGetter level, @NotNull BlockPos pos, @NotNull Direction direction) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof RedstoneConverterBlockEntity && direction.equals(state.getValue(TransformerBlock.FACING).getOpposite())) {
+            return ((RedstoneConverterBlockEntity) blockEntity).getCurrentSignal();
+        } else return 0;
+    }
+
+    @Override
+    public int getSignal(@NotNull BlockState state, BlockGetter level, @NotNull BlockPos pos, @NotNull Direction direction) {
+        return getDirectSignal(state, level, pos, direction);
+    }
+
+    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
         int power = level.getSignal(pos.offset(state.getValue(TransformerBlock.FACING).getNormal()), state.getValue(TransformerBlock.FACING).getOpposite());
+
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof RedstoneConverterBlockEntity) {
+            ((RedstoneConverterBlockEntity) blockEntity).supplySignal(power);
+        }
     }
 }

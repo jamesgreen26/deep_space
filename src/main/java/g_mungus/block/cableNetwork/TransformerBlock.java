@@ -79,4 +79,8 @@ public abstract class TransformerBlock extends CableBlock implements EntityBlock
         }
         return getNewBlockState(defaultBlockState().setValue(FACING, facing), context.getLevel(), context.getClickedPos());
     }
+
+    public BlockPos getFacingPos(BlockPos pos, BlockState state) {
+        return pos.offset(state.getValue(FACING).getNormal());
+    }
 }
