@@ -1,4 +1,4 @@
-package g_mungus.block.cable;
+package g_mungus.block.cableNetwork;
 
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import net.minecraft.core.BlockPos;

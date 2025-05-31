@@ -1,4 +1,4 @@
-package g_mungus.block.cable;
+package g_mungus.block.cableNetwork;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

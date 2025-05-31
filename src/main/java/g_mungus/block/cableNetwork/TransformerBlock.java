@@ -1,4 +1,4 @@
-package g_mungus.block.cable;
+package g_mungus.block.cableNetwork;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class TransformerBlock extends CableBlock {
+public abstract sealed class TransformerBlock extends CableBlock permits RedstoneConverterBlock, StepdownTransformerBlock, StepupTransformerBlock {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
 

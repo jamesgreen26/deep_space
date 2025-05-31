@@ -1,10 +1,7 @@
 package g_mungus.block;
 
 import g_mungus.DeepSpaceMod;
-import g_mungus.block.cable.CableBlock;
-import g_mungus.block.cable.DenseCableSeparatorBlock;
-import g_mungus.block.cable.DenseCablesBlock;
-import g_mungus.block.cable.TransformerBlock;
+import g_mungus.block.cableNetwork.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -61,19 +58,19 @@ public class ModBlocks {
                     .noOcclusion()));
 
     public static final RegistryObject<Block> STEPUP_TRANSFORMER = BLOCKS.register("stepup_transformer",
-            () -> new TransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new StepupTransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(2.0f)
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
 
     public static final RegistryObject<Block> STEPDOWN_TRANSFORMER = BLOCKS.register("stepdown_transformer",
-            () -> new TransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new StepdownTransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(2.0f)
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
 
     public static final RegistryObject<Block> REDSTONE_CONVERTER = BLOCKS.register("redstone_converter",
-            () -> new TransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new RedstoneConverterBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(2.0f)
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
