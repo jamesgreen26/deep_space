@@ -1,4 +1,4 @@
-package g_mungus.block;
+package g_mungus.block.cable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;

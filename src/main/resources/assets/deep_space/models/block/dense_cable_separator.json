@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "down": "deep_space:block/cable_separator_red",
+        "up": "deep_space:block/cable_separator_green",
+        "north": "deep_space:block/dense_cables_end",
+        "south": "deep_space:block/cable_separator_end",
+        "east": "deep_space:block/cable_separator_purple",
+        "west": "deep_space:block/cable_separator_blue",
+        "particle": "deep_space:block/cable_separator_end"
+    }
+} 

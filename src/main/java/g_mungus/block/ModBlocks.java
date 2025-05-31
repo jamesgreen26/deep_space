@@ -2,6 +2,8 @@ package g_mungus.block;
 
 import g_mungus.DeepSpaceMod;
 import g_mungus.block.cable.CableBlock;
+import g_mungus.block.cable.DenseCableSeparatorBlock;
+import g_mungus.block.cable.DenseCablesBlock;
 import g_mungus.block.cable.TransformerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -51,6 +53,12 @@ public class ModBlocks {
             .strength(2.5f)
             .requiresCorrectToolForDrops()
             .noOcclusion()));
+
+    public static final RegistryObject<Block> DENSE_CABLE_SEPARATOR = BLOCKS.register("dense_cable_separator",
+            () -> new DenseCableSeparatorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+                    .strength(2.5f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()));
 
     public static final RegistryObject<Block> STEPUP_TRANSFORMER = BLOCKS.register("stepup_transformer",
             () -> new TransformerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
