@@ -43,9 +43,5 @@ public interface CableNetworkComponent extends CanConnectCables {
         });
     }
 
-    Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos);
-
-    default Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from) {
-        return this.getConnectedPositions(level, selfPos);
-    }
+    Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from);
 }

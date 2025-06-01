@@ -62,12 +62,6 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
         return defaultBlockState().setValue(FACING, facing);
     }
 
-
-    @Override
-    public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos) {
-        return new HashMap<>();
-    }
-
     @Override
     public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from) {
         return new HashMap<>(); //fixme

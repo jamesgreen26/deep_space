@@ -126,7 +126,7 @@ public class CableBlock extends Block implements CableNetworkComponent {
     }
 
     @Override
-    public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos) {
+    public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from) {
         Map<BlockPos, BlockPos> connections = new HashMap<>();
         BlockState state = level.getBlockState(selfPos);
 
