@@ -1,7 +1,10 @@
 package g_mungus.block.cableNetwork;
 
-public interface QuadCableNetworkComponent {
-    public enum Channel {
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+
+public interface QuadCableNetworkComponent extends QuadCableNetworkAble {
+     enum Channel {
         GREEN, BLUE, RED, PURPLE;
 
         int getIndex() {
@@ -13,4 +16,5 @@ public interface QuadCableNetworkComponent {
             };
         }
     }
+
 }

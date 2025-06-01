@@ -19,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DenseCableSeparatorBlock extends Block implements CanConnectCables {
+public class DenseCableSeparatorBlock extends Block implements CanConnectCables, QuadCableNetworkComponent {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 3);
@@ -65,7 +65,27 @@ public class DenseCableSeparatorBlock extends Block implements CanConnectCables 
         return blockState.getValue(FACING).getAxis() != direction.getAxis();
     }
 
-    public BlockPos getPosForChannel(QuadCableNetworkComponent.Channel channel, BlockPos separator, BlockState state) {
+    public @Nullable BlockPos getOtherEnd(Level level, BlockPos self) {
+        BlockState state = level.getBlockState(self);
+        if (state.is(ModBlocks.DENSE_CABLE_SEPARATOR.get())) {
+            Direction facing = state.getValue(FACING);
+            BlockPos next = self.offset(facing.getNormal());
+
+            BlockState nextState = level.getBlockState(next);
+            Block nextBlock = nextState.getBlock();
+
+            if (nextBlock instanceof QuadCableNetworkAble && ((QuadCableNetworkAble) nextBlock).canQuadConnectTo(next, self, nextState)) {
+                if (nextBlock instanceof QuadCableNetworkComponent) {
+                    return next;
+                } else if (nextBlock instanceof QuadCableNetworkConnector) {
+                    return ((QuadCableNetworkConnector) nextBlock).getConnectedComponent(next, self, nextState, level);
+                }
+            }
+        }
+        return null;
+    }
+
+    public BlockPos getNeighborPosForChannel(QuadCableNetworkComponent.Channel channel, BlockPos separator, BlockState state) {
         if (!state.is(ModBlocks.DENSE_CABLE_SEPARATOR.get())) return separator;
         Direction facing = state.getValue(FACING);
         int rotation = state.getValue(ROTATION);
@@ -89,5 +109,10 @@ public class DenseCableSeparatorBlock extends Block implements CanConnectCables 
         };
 
         return separator.offset(selected);
+    }
+
+    @Override
+    public boolean canQuadConnectTo(BlockPos self, BlockPos to, BlockState selfState) {
+        return self.offset(selfState.getValue(FACING).getNormal()).equals(to);
     }
 }
