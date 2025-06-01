@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.utility.Components;
 import g_mungus.DeepSpaceMod;
 import g_mungus.blockentity.ModBlockEntities;
 import g_mungus.blockentity.NavProjectorBlockEntity;
+import g_mungus.data.planet.DisplayablePlanetData;
+import kotlin.Pair;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -42,7 +44,7 @@ public class CreateCompat {
                         boolean displayPrefix = stats.maxColumns() > 14;
                         boolean displaySuffix = stats.maxColumns() > 8;
                         String prefix = "Speed: ";
-                        String suffix = " Km/h";
+                        String suffix = " KM/H";
 
                         double speed = ((NavProjectorBlockEntity) blockEntity).getCurrentSpeed();
                         double KM_PH = ((int)(speed * 36)) / 10.0;
@@ -71,8 +73,25 @@ public class CreateCompat {
                     List<MutableComponent> text = new ArrayList<>();
                     BlockEntity blockEntity = context.getSourceBlockEntity();
                     if (blockEntity instanceof NavProjectorBlockEntity) {
-                        text.add(Components.literal("Nav Projector Info"));
-                        text.add(Components.literal("More info coming soon..."));
+
+                        Pair<DisplayablePlanetData, Double> nearest = ((NavProjectorBlockEntity) blockEntity).getNearestPlanet();
+
+                        if (nearest == null) {
+                            text.add(Components.literal("No Data"));
+                        } else {
+                            DisplayablePlanetData planet = nearest.component1();
+                            double distance = nearest.component2();
+
+                            int meters = ((int) distance);
+                            int km = meters / 1000;
+
+                            text.add(Components.literal(planet.object_name));
+                            if (meters < 1000) {
+                                text.add(Components.literal(meters + " M"));
+                            } else {
+                                text.add(Components.literal(km + " KM"));
+                            }
+                        }
                     }
                     return text;
                 }
