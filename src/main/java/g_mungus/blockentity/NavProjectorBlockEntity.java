@@ -55,7 +55,7 @@ public class NavProjectorBlockEntity extends BlockEntity {
 
         for (DisplayablePlanetData data : planetData) {
             Vector3d planetPos = new Vector3d(data.x, data.y, data.z);
-            double distance = planetPos.sub(position).length();
+            double distance = Math.max(planetPos.sub(position).length() - (data.scale / 2), 0.0);
             
             if (distance < minDistance) {
                 minDistance = distance;
