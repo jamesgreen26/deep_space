@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
-public interface CableNetworkComponent {
+public interface CableNetworkComponent extends CanConnectCables {
 
     default void updateNetwork(BlockPos pos, Level level) {
         Queue<Pair<BlockPos, BlockPos>> toCheck = new ArrayDeque<>();

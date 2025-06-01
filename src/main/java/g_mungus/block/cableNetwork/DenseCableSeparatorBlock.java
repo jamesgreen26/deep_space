@@ -19,7 +19,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DenseCableSeparatorBlock extends Block implements CanConnectCables, QuadCableNetworkComponent {
+import java.util.HashMap;
+import java.util.Map;
+
+public class DenseCableSeparatorBlock extends Block implements CableNetworkComponent, QuadCableNetworkComponent {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 3);
@@ -59,6 +62,21 @@ public class DenseCableSeparatorBlock extends Block implements CanConnectCables,
         return defaultBlockState().setValue(FACING, facing);
     }
 
+
+    @Override
+    public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos) {
+        return new HashMap<>();
+    }
+
+    @Override
+    public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from) {
+        return new HashMap<>(); //fixme
+    }
+
+    @Override
+    public void updateNetwork(BlockPos pos, Level level) {
+        //fixme
+    }
 
     @Override
     public boolean shouldCablesConnectToThis(BlockState blockState, Direction direction) {
