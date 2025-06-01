@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,33 +126,37 @@ public class CableBlock extends Block implements CanConnectCables, CableNetworkC
     }
 
     @Override
-    public List<BlockPos> getConnectedPositions(Level level, BlockPos selfPos) {
-        List<BlockPos> connections = new ArrayList<>();
+    public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos) {
+        Map<BlockPos, BlockPos> connections = new HashMap<>();
         BlockState state = level.getBlockState(selfPos);
 
         if (state.getBlock() instanceof CableBlock) {
             if (state.getValue(UP)) {
-                connections.add(selfPos.above());
+                connections.put(selfPos.above(), selfPos);
             }
             if (state.getValue(DOWN)) {
-                connections.add(selfPos.below());
+                connections.put(selfPos.below(), selfPos);
             }
             if (state.getValue(NORTH)) {
-                connections.add(selfPos.north());
+                connections.put(selfPos.north(), selfPos);
             }
             if (state.getValue(SOUTH)) {
-                connections.add(selfPos.south());
+                connections.put(selfPos.south(), selfPos);
             }
             if (state.getValue(EAST)) {
-                connections.add(selfPos.east());
+                connections.put(selfPos.east(), selfPos);
             }
             if (state.getValue(WEST)) {
-                connections.add(selfPos.west());
+                connections.put(selfPos.west(), selfPos);
             }
         }
 
-        return connections.stream().filter(pos ->
-            level.getBlockState(pos).getBlock() instanceof CableNetworkComponent
-        ).toList();
+        connections.keySet().forEach(key -> {
+            if (!(level.getBlockState(key).getBlock() instanceof CableNetworkComponent)) {
+                connections.remove(key);
+            }
+        });
+
+        return connections;
     }
 }

@@ -1,6 +1,7 @@
 package g_mungus.block.cableNetwork;
 
 import g_mungus.blockentity.TransformerBlockEntity;
+import kotlin.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -11,24 +12,26 @@ import java.util.*;
 public interface CableNetworkComponent {
 
     default void updateNetwork(BlockPos pos, Level level) {
-        Queue<BlockPos> toCheck = new ArrayDeque<>();
+        Queue<Pair<BlockPos, BlockPos>> toCheck = new ArrayDeque<>();
         List<BlockPos> checked = new ArrayList<>();
         Map<BlockPos, TransformerBlock.TransformerType> transformers = new HashMap<>();
 
-        toCheck.add(pos);
+        toCheck.add(new Pair<>(pos, null));
 
         while (!toCheck.isEmpty()) {
-            BlockPos current = toCheck.poll();
-            if (checked.contains(current)) continue;
-            checked.add(current);
+            Pair<BlockPos, BlockPos> current = toCheck.poll();
+            if (checked.contains(current.getFirst())) continue;
+            checked.add(current.getFirst());
 
-            Block block = level.getBlockState(current).getBlock();
+            Block block = level.getBlockState(current.getFirst()).getBlock();
             if (block instanceof TransformerBlock) {
                 TransformerBlock.TransformerType type = ((TransformerBlock) block).getTransformerType();
-                transformers.put(current, type);
+                transformers.put(current.getFirst(), type);
             }
 
-            toCheck.addAll(getConnectedPositions(level, current));
+            getConnectedPositions(level, current.component1(), current.component2()).forEach((key, value) -> {
+                toCheck.add(new Pair<>(key, value));
+            });
         }
 
         transformers.keySet().forEach(blockPos -> {
@@ -40,5 +43,9 @@ public interface CableNetworkComponent {
         });
     }
 
-    List<BlockPos> getConnectedPositions(Level level, BlockPos selfPos);
+    Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos);
+
+    default Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from) {
+        return this.getConnectedPositions(level, selfPos);
+    }
 }
