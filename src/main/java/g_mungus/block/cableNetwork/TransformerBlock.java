@@ -31,6 +31,13 @@ public abstract class TransformerBlock extends CableBlock implements EntityBlock
     private static final VoxelShape UP_SHAPE = Block.box(1, 12, 1, 15, 16, 15);
     private static final VoxelShape DOWN_SHAPE = Block.box(1, 0, 1, 15, 4, 15);
 
+    private static final VoxelShape NORTH_SHAPE_SUPPORT = Block.box(0, 0, 0, 16, 16, 8);
+    private static final VoxelShape SOUTH_SHAPE_SUPPORT = Block.box(0, 0, 8, 16, 16, 16);
+    private static final VoxelShape EAST_SHAPE_SUPPORT = Block.box(8, 0, 0, 16, 16, 16);
+    private static final VoxelShape WEST_SHAPE_SUPPORT = Block.box(0, 0, 0, 8, 16, 16);
+    private static final VoxelShape UP_SHAPE_SUPPORT = Block.box(0, 8, 0, 16, 16, 16);
+    private static final VoxelShape DOWN_SHAPE_SUPPORT = Block.box(0, 0, 0, 16, 8, 16);
+
 
     public TransformerBlock(Properties properties) {
         super(properties);
@@ -57,6 +64,18 @@ public abstract class TransformerBlock extends CableBlock implements EntityBlock
         };
         VoxelShape cableShape = super.getShape(state, level, pos, context);
         return Shapes.or(transformerShape, cableShape);
+    }
+
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return switch (state.getValue(FACING)) {
+            case DOWN -> DOWN_SHAPE_SUPPORT;
+            case UP -> UP_SHAPE_SUPPORT;
+            case NORTH -> NORTH_SHAPE_SUPPORT;
+            case SOUTH -> SOUTH_SHAPE_SUPPORT;
+            case WEST -> WEST_SHAPE_SUPPORT;
+            case EAST -> EAST_SHAPE_SUPPORT;
+        };
     }
 
     @Override
