@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CableBlock extends Block implements CableNetworkComponent {
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
@@ -127,7 +128,7 @@ public class CableBlock extends Block implements CableNetworkComponent {
 
     @Override
     public Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from) {
-        Map<BlockPos, BlockPos> connections = new HashMap<>();
+        Map<BlockPos, BlockPos> connections = new ConcurrentHashMap<>();
         BlockState state = level.getBlockState(selfPos);
 
         if (state.getBlock() instanceof CableBlock) {
