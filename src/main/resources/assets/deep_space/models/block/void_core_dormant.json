@@ -1,5 +1,6 @@
 {
 	"credit": "G_Mungus",
+	"parent": "block/cube",
 	"textures": {
 		"0": "deep_space:block/void_core_dormant",
 		"particle": "deep_space:block/void_core_dormant"
