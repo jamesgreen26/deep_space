@@ -31,43 +31,9 @@ public class CreateCompat {
 
     private static void registerDisplayLinkBehavior(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // Register first display source
-            ResourceLocation id1 = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_display_source_1");
-            DisplaySource navProjectorSource1 = new DisplaySource() {
-                @Override
-                public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
-                    List<MutableComponent> text = new ArrayList<>();
-                    BlockEntity blockEntity = context.getSourceBlockEntity();
-                    if (blockEntity instanceof NavProjectorBlockEntity) {
 
-
-                        boolean displayPrefix = stats.maxColumns() > 14;
-                        boolean displaySuffix = stats.maxColumns() > 8;
-                        String prefix = "Speed: ";
-                        String suffix = " KM/H";
-
-                        double speed = ((NavProjectorBlockEntity) blockEntity).getCurrentSpeed();
-                        double KM_PH = ((int)(speed * 36)) / 10.0;
-                        if (KM_PH >= 100 && !displayPrefix) {
-                            KM_PH = ((int)KM_PH);
-                        }
-
-                        String output = "";
-                        if (displayPrefix) output += prefix;
-                        output += KM_PH;
-                        if (displaySuffix) output += suffix;
-
-                        text.add(Components.literal(output));
-                    }
-                    return text;
-                }
-            };
-            DisplayBehaviour registered1 = AllDisplayBehaviours.register(id1, navProjectorSource1);
-            AllDisplayBehaviours.assignBlockEntity(registered1, ModBlockEntities.NAV_PROJECTOR.get());
-
-            // Register second display source
-            ResourceLocation id2 = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_display_source_2");
-            DisplaySource navProjectorSource2 = new DisplaySource() {
+            ResourceLocation navProjectorPlanet = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_planet");
+            DisplaySource displaySourcePlanet = new DisplaySource() {
                 @Override
                 public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
                     List<MutableComponent> text = new ArrayList<>();
@@ -96,8 +62,43 @@ public class CreateCompat {
                     return text;
                 }
             };
-            DisplayBehaviour registered2 = AllDisplayBehaviours.register(id2, navProjectorSource2);
-            AllDisplayBehaviours.assignBlockEntity(registered2, ModBlockEntities.NAV_PROJECTOR.get());
+
+            ResourceLocation navProjectorSpeed = ResourceLocation.fromNamespaceAndPath(DeepSpaceMod.MOD_ID, "nav_projector_speed");
+            DisplaySource displaySourceSpeed = new DisplaySource() {
+                @Override
+                public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
+                    List<MutableComponent> text = new ArrayList<>();
+                    BlockEntity blockEntity = context.getSourceBlockEntity();
+                    if (blockEntity instanceof NavProjectorBlockEntity) {
+
+
+                        boolean displayPrefix = stats.maxColumns() > 14;
+                        boolean displaySuffix = stats.maxColumns() > 8;
+                        String prefix = "Speed: ";
+                        String suffix = " KM/H";
+
+                        double speed = ((NavProjectorBlockEntity) blockEntity).getCurrentSpeed();
+                        double KM_PH = ((int)(speed * 36)) / 10.0;
+                        if (KM_PH >= 100 && !displayPrefix) {
+                            KM_PH = ((int)KM_PH);
+                        }
+
+                        String output = "";
+                        if (displayPrefix) output += prefix;
+                        output += KM_PH;
+                        if (displaySuffix) output += suffix;
+
+                        text.add(Components.literal(output));
+                    }
+                    return text;
+                }
+            };
+
+            DisplayBehaviour behaviour1 = AllDisplayBehaviours.register(navProjectorPlanet, displaySourcePlanet);
+            AllDisplayBehaviours.assignBlockEntity(behaviour1, ModBlockEntities.NAV_PROJECTOR.get());
+
+            DisplayBehaviour behavior2 = AllDisplayBehaviours.register(navProjectorSpeed, displaySourceSpeed);
+            AllDisplayBehaviours.assignBlockEntity(behavior2, ModBlockEntities.NAV_PROJECTOR.get());
         });
     }
 } 
