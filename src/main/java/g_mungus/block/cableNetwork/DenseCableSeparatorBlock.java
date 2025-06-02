@@ -124,9 +124,11 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
                     transformers.put(current.getFirst(), type);
                 }
 
-                getConnectedPositions(level, current.component1(), current.component2()).forEach((key, value) -> {
-                    toCheck.add(new Pair<>(key, value));
-                });
+                if (block instanceof CableNetworkComponent) {
+                    ((CableNetworkComponent) block).getConnectedPositions(level, current.component1(), current.component2()).forEach((key, value) -> {
+                        toCheck.add(new Pair<>(key, value));
+                    });
+                }
             }
 
             transformers.keySet().forEach(blockPos -> {

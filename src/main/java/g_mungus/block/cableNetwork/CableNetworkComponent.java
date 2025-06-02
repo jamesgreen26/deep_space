@@ -1,5 +1,6 @@
 package g_mungus.block.cableNetwork;
 
+import g_mungus.DeepSpaceMod;
 import g_mungus.blockentity.TransformerBlockEntity;
 import kotlin.Pair;
 import net.minecraft.core.BlockPos;
@@ -29,9 +30,11 @@ public interface CableNetworkComponent extends CanConnectCables {
                 transformers.put(current.getFirst(), type);
             }
 
-            getConnectedPositions(level, current.component1(), current.component2()).forEach((key, value) -> {
-                toCheck.add(new Pair<>(key, value));
-            });
+            if (block instanceof CableNetworkComponent) {
+                ((CableNetworkComponent) block).getConnectedPositions(level, current.component1(), current.component2()).forEach((key, value) -> {
+                    toCheck.add(new Pair<>(key, value));
+                });
+            }
         }
 
         transformers.keySet().forEach(blockPos -> {
@@ -41,6 +44,8 @@ public interface CableNetworkComponent extends CanConnectCables {
                 ((TransformerBlockEntity) blockEntity).updateTransformers(transformers);
             }
         });
+
+        DeepSpaceMod.LOGGER.info("Network size: {}, Terminal count: {}", checked.size(), transformers.size());
     }
 
     Map<BlockPos, BlockPos> getConnectedPositions(Level level, BlockPos selfPos, BlockPos from);
