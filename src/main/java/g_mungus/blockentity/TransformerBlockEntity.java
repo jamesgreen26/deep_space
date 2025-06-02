@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class TransformerBlockEntity extends BlockEntity {
 
@@ -16,14 +16,25 @@ public abstract class TransformerBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
-    private Map<BlockPos, TransformerBlock.TransformerType> transformers = new HashMap<>();
+    private final Map<BlockPos, TransformerBlock.TransformerType> transformers = new ConcurrentHashMap<>();
 
     public void updateTransformers(Map<BlockPos, TransformerBlock.TransformerType> transformers) {
-        this.transformers = transformers;
+        this.transformers.clear();
+        transformers.forEach((pos, type) -> {
+            // Convert world position to relative position
+            BlockPos relativePos = pos.subtract(this.worldPosition);
+            this.transformers.put(relativePos, type);
+        });
     }
 
     public Map<BlockPos, TransformerBlock.TransformerType> getTransformers() {
-        return transformers;
+        Map<BlockPos, TransformerBlock.TransformerType> worldTransformers = new ConcurrentHashMap<>();
+        transformers.forEach((relativePos, type) -> {
+            // Convert relative position back to world position
+            BlockPos worldPos = relativePos.offset(this.worldPosition);
+            worldTransformers.put(worldPos, type);
+        });
+        return worldTransformers;
     }
 
     @Override
