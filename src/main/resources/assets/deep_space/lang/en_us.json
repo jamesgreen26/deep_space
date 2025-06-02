@@ -6,6 +6,7 @@
     "block.deep_space.void_engine_viewport": "Void Engine Viewport",
     "block.deep_space.cable": "Cable",
     "block.deep_space.dense_cables": "Dense Cables",
+    "block.deep_space.dense_cable_separator": "Dense Cable Separator",
     "block.deep_space.stepup_transformer": "Step-Up Transformer",
     "block.deep_space.stepdown_transformer": "Step-Down Transformer",
     "block.deep_space.redstone_converter": "Redstone Converter",
@@ -17,6 +18,7 @@
     "item.deep_space.void_engine_viewport": "Void Engine Viewport",
     "item.deep_space.cable": "Cable",
     "item.deep_space.dense_cables": "Dense Cables",
+    "item.deep_space.dense_cable_separator": "Dense Cable Separator",
     "item.deep_space.stepup_transformer": "Step-Up Transformer",
     "item.deep_space.stepdown_transformer": "Step-Down Transformer",
     "item.deep_space.redstone_converter": "Redstone Converter",
@@ -27,5 +29,8 @@
     "deep_space.ponder.void_engine.text_2": "Build a 3x3 cube from Engine Frames and Engine Viewports.\nPlace a Void Core in the middle.",
     "deep_space.ponder.void_engine.text_3": "Add a Void Engine Interface. The Void Core will wake up.",
     "deep_space.ponder.void_engine.text_4": "With the Void Engine complete, you can fast-travel through the Wormhole dimension.",
-    "deep_space.ponder.void_engine.text_5": "To do this, supply the interface with a supply of FE, and a redstone signal."
+    "deep_space.ponder.void_engine.text_5": "To do this, supply the interface with a supply of FE, and a redstone signal.",
+
+    "deep_space.display_source.nav_projector_planet": "Nearest Planet",
+    "deep_space.display_source.nav_projector_speed": "Ship Speed"
 } 
