@@ -4,9 +4,11 @@ import g_mungus.block.ModBlocks;
 import g_mungus.block.cableNetwork.RedstoneConverterBlock;
 import g_mungus.block.cableNetwork.TransformerBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,6 +32,16 @@ public class RedstoneConverterBlockEntity extends TransformerBlockEntity {
     @Override
     public void updateTransformers(Map<BlockPos, TransformerBlock.TransformerType> transformers) {
         super.updateTransformers(transformers);
+
+        if (transformers.values().stream().anyMatch(transformerType -> (
+                        transformerType == TransformerBlock.TransformerType.STEPDOWN || transformerType == TransformerBlock.TransformerType.STEPUP
+                )
+        )) {
+            if (level != null) {
+                Vec3 center = worldPosition.getCenter();
+                level.explode(null, center.x, center.y, center.z, 4f, Level.ExplosionInteraction.BLOCK);
+            }
+        }
         updateAllSignals();
     }
 
