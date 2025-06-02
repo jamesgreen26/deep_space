@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -27,6 +28,7 @@ import java.util.*;
 public class DenseCableSeparatorBlock extends Block implements CableNetworkComponent, QuadCableNetworkComponent {
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
+    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 3);
 
 
@@ -35,6 +37,7 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(ROTATION, 0)
+                .setValue(CONNECTED, false)
         );
     }
 
@@ -43,6 +46,7 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
         super.createBlockStateDefinition(builder);
         builder.add(FACING);
         builder.add(ROTATION);
+        builder.add(CONNECTED);
     }
 
     @Override
@@ -67,7 +71,41 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
         if (context.getPlayer() != null && context.getPlayer().isCrouching()) {
             facing = facing.getOpposite();
         }
-        return defaultBlockState().setValue(FACING, facing);
+        return defaultBlockState().setValue(FACING, facing).setValue(CONNECTED, shouldConnectPrePlace(context.getLevel(), facing, context.getClickedPos()));
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (!level.isClientSide) {
+            boolean currentlyConnected = state.getValue(CONNECTED);
+            boolean shouldConnect = shouldConnect(level, state.getValue(FACING), pos);
+
+            if (currentlyConnected != shouldConnect) {
+                level.setBlock(pos, state.setValue(CONNECTED, shouldConnect), 3);
+                updateNetwork(pos, level);
+            }
+        }
+    }
+
+    private boolean shouldConnectPrePlace(Level level, Direction facing, BlockPos pos) {
+        BlockPos neighborPos = pos.offset(facing.getNormal());
+        BlockState neighborState = level.getBlockState(neighborPos);
+        Block neighborBlock = neighborState.getBlock();
+
+        return (neighborBlock instanceof QuadCableNetworkAble
+                && ((QuadCableNetworkAble) neighborBlock).canQuadConnectTo(neighborPos, pos, neighborState)
+        );
+    }
+
+    private boolean shouldConnect(Level level, Direction facing, BlockPos pos) {
+        BlockPos neighborPos = pos.offset(facing.getNormal());
+        BlockState neighborState = level.getBlockState(neighborPos);
+        Block neighborBlock = neighborState.getBlock();
+
+        return (neighborBlock instanceof QuadCableNetworkAble
+                && ((QuadCableNetworkAble) neighborBlock).canQuadConnectTo(neighborPos, pos, neighborState)
+                && this.canQuadConnectTo(pos, neighborPos, level.getBlockState(pos))
+        );
     }
 
     @Override
@@ -230,6 +268,7 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
 
     @Override
     public boolean canQuadConnectTo(BlockPos self, BlockPos to, BlockState selfState) {
+        if (!selfState.is(ModBlocks.DENSE_CABLE_SEPARATOR.get())) return false;
         return self.offset(selfState.getValue(FACING).getNormal()).equals(to);
     }
 }
