@@ -2,11 +2,11 @@
     "parent": "block/cube",
     "textures": {
         "down": "deep_space:block/dense_cables_end",
-        "up": "deep_space:block/cable_separator_end",
+        "up": "deep_space:block/dense_cables_bend",
         "north": "deep_space:block/dense_cables_end",
-        "south": "deep_space:block/cable_separator_end",
-        "east": "deep_space:block/cable_separator_end",
-        "west": "deep_space:block/cable_separator_end",
+        "south": "deep_space:block/dense_cables_bend",
+        "east": "deep_space:block/dense_cables_bend",
+        "west": "deep_space:block/dense_cables_bend",
         "particle": "deep_space:block/cable_separator_end"
     }
 } 
