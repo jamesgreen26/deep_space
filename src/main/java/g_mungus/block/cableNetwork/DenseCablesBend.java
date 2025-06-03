@@ -34,20 +34,75 @@ public class DenseCablesBend extends Block implements QuadCableNetworkConnector 
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction facing = context.getNearestLookingDirection();
-        Direction perpendicular = getPerpendicularDirection(facing);
+        if (context.getPlayer() == null) {
+            return this.defaultBlockState()
+                    .setValue(DIRECTION_A, Direction.UP)
+                    .setValue(DIRECTION_B, Direction.NORTH)
+                    .setValue(CONNECTIONS, 0);
+        }
+
+        float pitch = context.getPlayer().getXRot();
+        float yaw = context.getPlayer().getYRot();
+
+        // Normalize angles to 0-360
+        yaw = (yaw + 360) % 360;
+        pitch = (pitch + 360) % 360;
+
+        // Get both directions from the angles
+        Direction[] directions = getDirectionsFromPitchYaw(pitch, yaw);
+
         return this.defaultBlockState()
-                .setValue(DIRECTION_A, facing)
-                .setValue(DIRECTION_B, perpendicular)
-                .setValue(CONNECTIONS, getConnections(facing, perpendicular, context.getClickedPos(), context.getLevel()));
+                .setValue(DIRECTION_A, directions[0])
+                .setValue(DIRECTION_B, directions[1])
+                .setValue(CONNECTIONS, getConnections(directions[0], directions[1], context.getClickedPos(), context.getLevel()));
     }
 
-    private Direction getPerpendicularDirection(Direction direction) {
-        return switch (direction.getAxis()) {
-            case X -> Direction.UP;
-            case Y -> Direction.EAST;
-            case Z -> Direction.UP;
-        };
+    private Direction[] getDirectionsFromPitchYaw(float pitch, float yaw) {
+        // Convert pitch to 0-360 range where 0 is looking straight ahead
+        float normalizedPitch = (pitch + 90) % 360;
+        
+        // Determine vertical direction
+        Direction verticalDir;
+        if (normalizedPitch < 45 || normalizedPitch >= 315) {
+            verticalDir = Direction.UP;
+        } else if (normalizedPitch >= 135 && normalizedPitch < 225) {
+            verticalDir = Direction.DOWN;
+        } else {
+            verticalDir = null; // Looking horizontally
+        }
+
+        // If looking mostly up or down, use that as primary direction
+        if (verticalDir != null) {
+            Direction horizontalDir;
+            if (yaw >= 315 || yaw < 45) {
+                horizontalDir = Direction.SOUTH;
+            } else if (yaw >= 45 && yaw < 135) {
+                horizontalDir = Direction.WEST;
+            } else if (yaw >= 135 && yaw < 225) {
+                horizontalDir = Direction.NORTH;
+            } else {
+                horizontalDir = Direction.EAST;
+            }
+
+            return new Direction[]{verticalDir.getOpposite(), horizontalDir.getOpposite()};
+        } else {
+            Direction primary;
+            Direction secondary;
+            if (yaw >= 0 && yaw < 90) {
+                primary = Direction.NORTH;
+                secondary = Direction.EAST;
+            } else if (yaw >= 90 && yaw < 180) {
+                primary = Direction.EAST;
+                secondary = Direction.SOUTH;
+            } else if (yaw >= 180 && yaw < 270) {
+                primary = Direction.SOUTH;
+                secondary = Direction.WEST;
+            } else {
+                primary = Direction.WEST;
+                secondary = Direction.NORTH;
+            }
+            return new Direction[]{primary, secondary};
+        }
     }
 
     @Override
