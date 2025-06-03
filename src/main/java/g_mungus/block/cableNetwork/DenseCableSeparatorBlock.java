@@ -81,7 +81,7 @@ public class DenseCableSeparatorBlock extends Block implements CableNetworkCompo
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getNearestLookingDirection();
-        if (context.getPlayer() != null && context.getPlayer().isCrouching()) {
+        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
             facing = facing.getOpposite();
         }
         return getNewBlockState(
