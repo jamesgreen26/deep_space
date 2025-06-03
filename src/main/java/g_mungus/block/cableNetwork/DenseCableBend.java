@@ -12,12 +12,12 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.Nullable;
 
-public class DenseCablesBend extends Block implements QuadCableNetworkConnector {
+public class DenseCableBend extends Block implements QuadCableNetworkConnector {
     public static final DirectionProperty DIRECTION_A = DirectionProperty.create("facing_a");
     public static final DirectionProperty DIRECTION_B = DirectionProperty.create("facing_b");
     public static final IntegerProperty CONNECTIONS = IntegerProperty.create("connections", 0, 2);
 
-    public DenseCablesBend(Properties properties) {
+    public DenseCableBend(Properties properties) {
         super(properties);
         this.registerDefaultState(
                 this.stateDefinition.any()
@@ -151,7 +151,7 @@ public class DenseCablesBend extends Block implements QuadCableNetworkConnector 
 
     @Override
     public @Nullable BlockPos getConnectedComponent(BlockPos self, BlockPos from, BlockState selfState, Level level) {
-        if (selfState.is(ModBlocks.DENSE_CABLES_BEND.get())) {
+        if (selfState.is(ModBlocks.DENSE_CABLE_BEND.get())) {
             Direction dirA = selfState.getValue(DIRECTION_A);
             Direction dirB = selfState.getValue(DIRECTION_B);
 
@@ -199,7 +199,7 @@ public class DenseCablesBend extends Block implements QuadCableNetworkConnector 
 
     @Override
     public boolean canQuadConnectTo(BlockPos self, BlockPos to, BlockState selfState) {
-        if (selfState.is(ModBlocks.DENSE_CABLES_BEND.get())) {
+        if (selfState.is(ModBlocks.DENSE_CABLE_BEND.get())) {
             Direction dirA = selfState.getValue(DIRECTION_A);
             Direction dirB = selfState.getValue(DIRECTION_B);
 
