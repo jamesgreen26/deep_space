@@ -44,6 +44,10 @@ public class DenseCablesBend extends Block implements QuadCableNetworkConnector 
         float pitch = context.getPlayer().getXRot();
         float yaw = context.getPlayer().getYRot();
 
+        if (context.getPlayer().isShiftKeyDown()) {
+            yaw = yaw + 180;
+        }
+
         // Normalize angles to 0-360
         yaw = (yaw + 360) % 360;
         pitch = (pitch + 360) % 360;
